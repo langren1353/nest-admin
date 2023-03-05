@@ -23,9 +23,11 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/semi': [2, 'never'],
     '@typescript-eslint/no-unused-vars': 0,
     'symbol-description': 0,
+    'vue/no-unused-vars': 'off',
     semi: 0,
     'array-bracket-spacing': [2, 'never'],
     // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号，

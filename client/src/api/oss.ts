@@ -40,3 +40,11 @@ export function fileUpload (data: FormData): Promise<ResultData<OssApiResult[]>>
     data
   })
 }
+
+export function deleteFile (params: OssApiResult): Promise<ResultData<OssApiResult>> {
+  return http.request<ResultData<OssApiResult>>({
+    url: `${config.api.baseUrl}/oss/delete`,
+    method: ApiMethodContants.DELETE,
+    params
+  })
+}

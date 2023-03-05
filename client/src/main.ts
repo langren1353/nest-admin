@@ -30,10 +30,7 @@ app.directive('perm', permDirective)
 
 app.component('svg-icon', SvgIcon)
 
-app.use(ELementPlus, {
-  locale: zhCn,
-  size: 'default'
-}).use(store, key).use(router)
+app.use(ELementPlus).use(store, key).use(router)
 
 app.use(KUI)
 

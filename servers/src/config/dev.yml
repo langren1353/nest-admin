@@ -18,7 +18,7 @@ db:
   mysql:
     host: 'localhost'
     username: 'root'
-    password: 'root'
+    password: '123456'
     database: 'kapok'
     port: 3306
     charset: 'utf8mb4'
