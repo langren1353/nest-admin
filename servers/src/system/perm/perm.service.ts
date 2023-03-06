@@ -17,7 +17,12 @@ import { RouteDto } from './dto/route.dto'
 
 @Injectable()
 export class PermService {
-  constructor(private readonly http: HttpService, private readonly config: ConfigService, private readonly redisService: RedisService, private dataSource: DataSource) {}
+  constructor(
+    private readonly http: HttpService,
+    private readonly config: ConfigService,
+    private readonly redisService: RedisService,
+    private dataSource: DataSource,
+  ) {}
 
   /**
    * 查询个人 拥有的 api 权限
@@ -133,7 +138,11 @@ export class PermService {
       const paths = data.paths
       Object.keys(paths).forEach((path) => {
         Object.keys(paths[path]).forEach((method) => {
-          const route = { path: path.replace(/\{/g, ':').replace(/\}/g, ''), method: method.toUpperCase(), desc: paths[path][method].summary }
+          const route = {
+            path: path.replace(/\{/g, ':').replace(/\}/g, ''),
+            method: method.toUpperCase(),
+            desc: paths[path][method].summary,
+          }
           routes.push(route)
         })
       })

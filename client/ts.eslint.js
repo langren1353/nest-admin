@@ -8,7 +8,6 @@ module.exports = {
   '@typescript-eslint/prefer-interface': 0,
   'import/no-cycle': 1,
   'react/prop-types': 0,
-  '@typescript-eslint/ban-ts-ignore': 1, // Remove after ts adoption increases
   '@typescript-eslint/explicit-function-return-type': [
     1,
     {
@@ -16,5 +15,4 @@ module.exports = {
     },
   ],
   '@typescript-eslint/no-this-alias': 0,
-  'sprinklr/no-logic-i18n-template-literal': 2,
 }

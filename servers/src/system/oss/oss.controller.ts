@@ -1,4 +1,18 @@
-import { Controller, Get, Post, UploadedFile, UseInterceptors, Query, HttpCode, Body, Req, Delete, Param, Response, StreamableFile } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+  Query,
+  HttpCode,
+  Body,
+  Req,
+  Delete,
+  Param,
+  Response,
+  StreamableFile,
+} from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiExtraModels, ApiBearerAuth } from '@nestjs/swagger'
 
@@ -45,7 +59,11 @@ export class OssController {
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   @ApiResult(OssEntity)
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() params: { business: string; ori_oss: string }, @Req() req): Promise<ResultData> {
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() params: { business: string; ori_oss: string },
+    @Req() req,
+  ): Promise<ResultData> {
     return await this.ossService.create([file], params.business || '', params.ori_oss, req.user)
   }
 

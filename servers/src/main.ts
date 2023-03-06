@@ -42,7 +42,12 @@ async function bootstrap() {
   // web 安全，防常见漏洞
   app.use(helmet())
 
-  const swaggerOptions = new DocumentBuilder().setTitle('Nest-Admin App').setDescription('Nest-Admin App 接口文档').setVersion('2.0.0').addBearerAuth().build()
+  const swaggerOptions = new DocumentBuilder()
+    .setTitle('Nest-Admin App')
+    .setDescription('Nest-Admin App 接口文档')
+    .setVersion('2.0.0')
+    .addBearerAuth()
+    .build()
   const document = SwaggerModule.createDocument(app, swaggerOptions)
   // 项目依赖当前文档功能，最好不要改变当前地址
   // 生产环境使用 nginx 可以将当前文档地址 屏蔽外部访问
@@ -84,7 +89,13 @@ async function bootstrap() {
 
   await app.listen(port)
 
-  Logger.log(Chalk.green('Nest-Admin 服务启动成功 '), `http://localhost:${port}${prefix}/`, '\n', Chalk.green('swagger 文档地址        '), `http://localhost:${port}${prefix}/docs/`)
+  Logger.log(
+    Chalk.green('Nest-Admin 服务启动成功 '),
+    `http://localhost:${port}${prefix}/`,
+    '\n',
+    Chalk.green('swagger 文档地址        '),
+    `http://localhost:${port}${prefix}/docs/`,
+  )
 }
 
 bootstrap()

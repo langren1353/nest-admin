@@ -1,5 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsMobilePhone, IsNotEmpty, IsNumber, IsOptional, IsPhoneNumber, IsString, IsIn, IsNumberString } from 'class-validator'
+import {
+  IsEmail,
+  IsMobilePhone,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsIn,
+  IsNumberString,
+} from 'class-validator'
 import { $enum } from 'ts-enum-util'
 
 import { StatusValue } from '../../../common/enums/common.enum'

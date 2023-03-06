@@ -43,7 +43,11 @@ export class UserRoleService {
   }
 
   /** 生成用户角色关系, 单个角色， 多个用户 */
-  async createOrCancelUserRole(userIds: string[], roleId: string, createOrCancel: 'create' | 'cancel'): Promise<ResultData> {
+  async createOrCancelUserRole(
+    userIds: string[],
+    roleId: string,
+    createOrCancel: 'create' | 'cancel',
+  ): Promise<ResultData> {
     const res = await this.userManager.transaction(async (transactionalEntityManager) => {
       if (createOrCancel === 'create') {
         const dto = plainToInstance(
@@ -60,7 +64,8 @@ export class UserRoleService {
     if (res) {
       await this.redisService.del(userIds.map((userId) => getRedisKey(RedisKeyPrefix.USER_ROLE, userId)))
       return ResultData.ok()
-    } else return ResultData.fail(AppHttpCode.SERVICE_ERROR, `${createOrCancel === 'create' ? '添加' : '取消'}用户关联失败`)
+    } else
+      return ResultData.fail(AppHttpCode.SERVICE_ERROR, `${createOrCancel === 'create' ? '添加' : '取消'}用户关联失败`)
   }
 
   /** 查询单个用户所拥有的角色 id */
@@ -87,7 +92,12 @@ export class UserRoleService {
       res = await this.dataSource
         .createQueryBuilder('sys_user', 'su')
         .where((qb: any) => {
-          const subQuery = qb.subQuery().select(['sur.user_id']).from('sys_user_role', 'sur').where('sur.role_id = :roleId', { roleId }).getQuery()
+          const subQuery = qb
+            .subQuery()
+            .select(['sur.user_id'])
+            .from('sys_user_role', 'sur')
+            .where('sur.role_id = :roleId', { roleId })
+            .getQuery()
           return `su.status = 1 and su.id not in ${subQuery}`
         })
         .skip(size * (page - 1))

@@ -49,7 +49,11 @@ export class UserService {
     if (!user?.id) {
       user = await this.userRepo.findOne({ where: { id } })
       user = plainToInstance(UserEntity, { ...user }, { enableImplicitConversion: true })
-      await this.redisService.hmset(redisKey, instanceToPlain(user), ms(this.config.get<string>('jwt.expiresin')) / 1000)
+      await this.redisService.hmset(
+        redisKey,
+        instanceToPlain(user),
+        ms(this.config.get<string>('jwt.expiresin')) / 1000,
+      )
     }
     user.password = ''
     user.salt = ''
@@ -62,11 +66,15 @@ export class UserService {
 
   /** 创建用户 */
   async create(dto: CreateUserDto): Promise<ResultData> {
-    if (dto.password !== dto.confirmPassword) return ResultData.fail(AppHttpCode.USER_PASSWORD_INVALID, '两次输入密码不一致，请重试')
+    if (dto.password !== dto.confirmPassword)
+      return ResultData.fail(AppHttpCode.USER_PASSWORD_INVALID, '两次输入密码不一致，请重试')
     // 防止重复创建 start
-    if (await this.findOneByAccount(dto.account)) return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '帐号已存在，请调整后重新注册！')
-    if (await this.userRepo.findOne({ where: { phoneNum: dto.phoneNum } })) return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '当前手机号已存在，请调整后重新注册')
-    if (await this.userRepo.findOne({ where: { email: dto.email } })) return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '当前邮箱已存在，请调整后重新注册')
+    if (await this.findOneByAccount(dto.account))
+      return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '帐号已存在，请调整后重新注册！')
+    if (await this.userRepo.findOne({ where: { phoneNum: dto.phoneNum } }))
+      return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '当前手机号已存在，请调整后重新注册')
+    if (await this.userRepo.findOne({ where: { email: dto.email } }))
+      return ResultData.fail(AppHttpCode.USER_CREATE_EXISTING, '当前邮箱已存在，请调整后重新注册')
     // 防止重复创建 end
     const salt = await genSalt()
     dto.password = await hash(dto.password, salt)
@@ -97,7 +105,8 @@ export class UserService {
     if (!user) return ResultData.fail(AppHttpCode.USER_PASSWORD_INVALID, '帐号或密码错误')
     const checkPassword = await compare(password, user.password)
     if (!checkPassword) return ResultData.fail(AppHttpCode.USER_PASSWORD_INVALID, '帐号或密码错误')
-    if (user.status === 0) return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '您已被禁用，如需正常使用请联系管理员')
+    if (user.status === 0)
+      return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '您已被禁用，如需正常使用请联系管理员')
     // 生成 token
     const data = this.genToken({ id: user.id })
     return ResultData.ok(data)
@@ -113,8 +122,10 @@ export class UserService {
    */
   async importUsers(file: Express.Multer.File): Promise<ResultData> {
     const acceptFileType = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    if (!acceptFileType.indexOf(file.mimetype)) return ResultData.fail(AppHttpCode.FILE_TYPE_ERROR, '文件类型错误，请上传 .xls 或 .xlsx 文件')
-    if (file.size > 5 * 1024 * 1024) return ResultData.fail(AppHttpCode.FILE_SIZE_EXCEED_LIMIT, '文件大小超过，最大支持 5M')
+    if (!acceptFileType.indexOf(file.mimetype))
+      return ResultData.fail(AppHttpCode.FILE_TYPE_ERROR, '文件类型错误，请上传 .xls 或 .xlsx 文件')
+    if (file.size > 5 * 1024 * 1024)
+      return ResultData.fail(AppHttpCode.FILE_SIZE_EXCEED_LIMIT, '文件大小超过，最大支持 5M')
     const workSheet = xlsx.parse(file.buffer)
     // 需要处理 excel 内帐号 手机号 邮箱 是否有重复的情况
     if (workSheet[0].data.length === 0) return ResultData.fail(AppHttpCode.DATA_IS_EMPTY, 'excel 导入数据为空')
@@ -166,10 +177,17 @@ export class UserService {
       }
     }
     if (accountErrArr.length > 0 || phoneErrArr.length > 0 || emailErrArr.length > 0) {
-      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 内部有数据重复或数据有误，请修改调整后上传导入', { account: accountErrArr, phone: phoneErrArr, email: emailErrArr })
+      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 内部有数据重复或数据有误，请修改调整后上传导入', {
+        account: accountErrArr,
+        phone: phoneErrArr,
+        email: emailErrArr,
+      })
     }
     // 若 excel 内部无重复，则需要判断 excel 中数据 是否与 数据库的数据重复
-    const existingAccount = await this.userRepo.find({ select: ['account'], where: { account: In(userArr.map((v) => v.account)) } })
+    const existingAccount = await this.userRepo.find({
+      select: ['account'],
+      where: { account: In(userArr.map((v) => v.account)) },
+    })
     if (existingAccount.length > 0) {
       existingAccount.forEach((v) => {
         // userArr 中的数据 下标 换算成 excel 中的 行号 + 2
@@ -177,14 +195,20 @@ export class UserService {
       })
     }
     // 手机号、邮箱非必填，所以查询存在重复的 过滤掉 空数据
-    const existingPhone = await this.userRepo.find({ select: ['phoneNum'], where: { account: In(userArr.map((v) => v.phoneNum).filter((v) => !!v)) } })
+    const existingPhone = await this.userRepo.find({
+      select: ['phoneNum'],
+      where: { account: In(userArr.map((v) => v.phoneNum).filter((v) => !!v)) },
+    })
     if (existingPhone.length > 0) {
       existingPhone.forEach((v) => {
         // userArr 中的数据 下标 换算成 excel 中的 行号 + 2
         phoneErrArr.push({ key: v.phoneNum, val: [userArr.findIndex((m) => m.phoneNum === v.phoneNum) + 2] })
       })
     }
-    const existingEmail = await this.userRepo.find({ select: ['email'], where: { account: In(userArr.map((v) => v.email).filter((v) => !!v)) } })
+    const existingEmail = await this.userRepo.find({
+      select: ['email'],
+      where: { account: In(userArr.map((v) => v.email).filter((v) => !!v)) },
+    })
     if (existingEmail.length > 0) {
       existingEmail.forEach((v) => {
         // userArr 中的数据 下标 换算成 excel 中的 行号 + 2
@@ -192,7 +216,11 @@ export class UserService {
       })
     }
     if (accountErrArr.length > 0 || phoneErrArr.length > 0 || emailErrArr.length > 0) {
-      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 系统中已有重复项，请修改调整后上传导入', { account: accountErrArr, phone: phoneErrArr, email: emailErrArr })
+      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 系统中已有重复项，请修改调整后上传导入', {
+        account: accountErrArr,
+        phone: phoneErrArr,
+        email: emailErrArr,
+      })
     }
     // excel 与数据库无重复，准备入库
     const password = this.config.get<string>('user.initialPassword')
@@ -203,7 +231,9 @@ export class UserService {
       v['salt'] = salt
     })
     const result = await this.userManager.transaction(async (transactionalEntityManager) => {
-      return await transactionalEntityManager.save<UserEntity>(plainToInstance(UserEntity, userArr, { ignoreDecorators: true }))
+      return await transactionalEntityManager.save<UserEntity>(
+        plainToInstance(UserEntity, userArr, { ignoreDecorators: true }),
+      )
     })
     return ResultData.ok(instanceToPlain(result))
   }
@@ -212,7 +242,8 @@ export class UserService {
   async update(dto: UpdateUserDto): Promise<ResultData> {
     const existing = await this.findOneById(dto.id)
     if (!existing) return ResultData.fail(AppHttpCode.USER_NOT_FOUND, '当前用户不存在或已删除')
-    if (existing.status === 0) return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '当前用户已被禁用，不可更新用户信息')
+    if (existing.status === 0)
+      return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '当前用户已被禁用，不可更新用户信息')
     const roleIds = dto.roleIds || []
     const userInfo = instanceToPlain(dto)
     delete userInfo.roleIds
@@ -237,7 +268,8 @@ export class UserService {
     if (userId === currUserId) return ResultData.fail(AppHttpCode.USER_FORBIDDEN_UPDATE, '当前登录用户状态不可更改')
     const existing = await this.findOneById(userId)
     if (!existing) ResultData.fail(AppHttpCode.USER_NOT_FOUND, '当前用户不存在或已删除')
-    if (existing.type === UserType.SUPER_ADMIN) return ResultData.fail(AppHttpCode.USER_FORBIDDEN_UPDATE, '超管帐号状态禁止更改')
+    if (existing.type === UserType.SUPER_ADMIN)
+      return ResultData.fail(AppHttpCode.USER_FORBIDDEN_UPDATE, '超管帐号状态禁止更改')
     const { affected } = await this.userManager.transaction(async (transactionalEntityManager) => {
       return await transactionalEntityManager.update<UserEntity>(UserEntity, userId, { id: userId, status })
     })
@@ -252,8 +284,10 @@ export class UserService {
    */
   async updatePassword(userId: string, password: string, reset: boolean): Promise<ResultData> {
     const existing = await this.userRepo.findOne({ where: { id: userId } })
-    if (!existing) return ResultData.fail(AppHttpCode.USER_NOT_FOUND, `用户不存在或已删除，${reset ? '重置' : '更新'}失败`)
-    if (existing.status === 0) return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '当前用户已被禁用，不可重置用户密码')
+    if (!existing)
+      return ResultData.fail(AppHttpCode.USER_NOT_FOUND, `用户不存在或已删除，${reset ? '重置' : '更新'}失败`)
+    if (existing.status === 0)
+      return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '当前用户已被禁用，不可重置用户密码')
     const newPassword = reset ? this.config.get<string>('user.initialPassword') : password
     const user = { id: userId, password: await hash(newPassword, existing.salt) }
     const { affected } = await this.userManager.transaction(async (transactionalEntityManager) => {
@@ -292,7 +326,12 @@ export class UserService {
       ...(status ? { status } : null),
       ...(account ? { account: Like(`%${account}%`) } : null),
     }
-    const users = await this.userRepo.findAndCount({ where, order: { id: 'DESC' }, skip: size * (page - 1), take: size })
+    const users = await this.userRepo.findAndCount({
+      where,
+      order: { id: 'DESC' },
+      skip: size * (page - 1),
+      take: size,
+    })
     return ResultData.ok({ list: instanceToPlain(users[0]), total: users[1] })
   }
 

@@ -30,7 +30,12 @@ export class OssService {
     this.isAbsPath = path.isAbsolute(this.config.get<string>('app.file.location'))
   }
 
-  async create(files: Express.Multer.File[], business: string, ori_oss: string = null, user: { id: string; account: string }): Promise<ResultData> {
+  async create(
+    files: Express.Multer.File[],
+    business: string,
+    ori_oss: string = null,
+    user: { id: string; account: string },
+  ): Promise<ResultData> {
     const ori_ossEntity = JSON.parse(ori_oss)
     if (ori_oss) {
       await this.delete(ori_ossEntity)
@@ -42,7 +47,9 @@ export class OssService {
       const newFileName = `${uuid.v4().replace(/-/g, '')}.${mime.extension(file.mimetype)}`
       // 文件存储路径
       const fileLocation = path.normalize(
-        this.isAbsPath ? `${this.config.get<string>('file.location')}/${newFileName}` : path.join(this.productLocation, `${this.config.get<string>('app.file.location')}`, newFileName),
+        this.isAbsPath
+          ? `${this.config.get<string>('file.location')}/${newFileName}`
+          : path.join(this.productLocation, `${this.config.get<string>('app.file.location')}`, newFileName),
       )
 
       // fs 创建文件写入流
@@ -53,7 +60,9 @@ export class OssService {
       writeFile.close()
       const ossFile = {
         id: undefined,
-        url: `${this.config.get<string>('app.file.domain')}${this.config.get<string>('app.file.serveRoot') || ''}/${newFileName}`,
+        url: `${this.config.get<string>('app.file.domain')}${
+          this.config.get<string>('app.file.serveRoot') || ''
+        }/${newFileName}`,
         size: file.size,
         type: file.mimetype,
         location: fileLocation,

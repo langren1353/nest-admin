@@ -9,7 +9,9 @@ import config from '../../../config/index'
 
 const appLogDirConfig = config().app.logger.dir
 
-const baseLogPath = Path.normalize(Path.isAbsolute(appLogDirConfig) ? appLogDirConfig : Path.join(process.cwd(), appLogDirConfig))
+const baseLogPath = Path.normalize(
+  Path.isAbsolute(appLogDirConfig) ? appLogDirConfig : Path.join(process.cwd(), appLogDirConfig),
+)
 
 // 日志级别
 export enum LoggerLevel {
@@ -26,7 +28,12 @@ export enum LoggerLevel {
 
 // 内容跟踪类
 export class ContextTrace {
-  constructor(public readonly context: string, public readonly path?: string, public readonly lineNumber?: number, public readonly columnNumber?: number) {}
+  constructor(
+    public readonly context: string,
+    public readonly path?: string,
+    public readonly lineNumber?: number,
+    public readonly columnNumber?: number,
+  ) {}
 }
 
 Log4js.addLayout('Nest-Admin', (logConfig: any) => {

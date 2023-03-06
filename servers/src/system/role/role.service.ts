@@ -69,8 +69,16 @@ export class RoleService {
           ),
         )
       }
-      const updateRole = { id: dto.id, ...(dto.name ? { name: dto.name } : null), ...(dto.remark ? { remark: dto.remark } : null) }
-      const result = await transactionalEntityManager.update<RoleEntity>(RoleEntity, dto.id, plainToInstance(RoleEntity, updateRole))
+      const updateRole = {
+        id: dto.id,
+        ...(dto.name ? { name: dto.name } : null),
+        ...(dto.remark ? { remark: dto.remark } : null),
+      }
+      const result = await transactionalEntityManager.update<RoleEntity>(
+        RoleEntity,
+        dto.id,
+        plainToInstance(RoleEntity, updateRole),
+      )
       return result
     })
     if (!affected) return ResultData.fail(AppHttpCode.SERVICE_ERROR, '当前角色更新失败，请稍后尝试')
@@ -104,7 +112,11 @@ export class RoleService {
     if (type === UserType.SUPER_ADMIN) {
       roleData = await this.roleRepo.find({ order: { id: 'DESC' } })
     } else {
-      roleData = await this.dataSource.createQueryBuilder('sys_role', 'sr').leftJoinAndSelect('sys_user_role', 'sur', 'sr.id = sur.role_id').where('sur.user_id = :userId', { userId }).getMany()
+      roleData = await this.dataSource
+        .createQueryBuilder('sys_role', 'sr')
+        .leftJoinAndSelect('sys_user_role', 'sur', 'sr.id = sur.role_id')
+        .where('sur.user_id = :userId', { userId })
+        .getMany()
     }
     return ResultData.ok(roleData)
   }

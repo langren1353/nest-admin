@@ -63,7 +63,12 @@ export class PostService {
       ...(!!code ? { code: Like(`%${code}%`) } : null),
       ...(![null, undefined].includes(status) ? { status } : null),
     }
-    const posts = await this.postRepo.findAndCount({ where, order: { orderNum: 'DESC', id: 'DESC', createDate: 'DESC' }, skip: size * (page - 1), take: size })
+    const posts = await this.postRepo.findAndCount({
+      where,
+      order: { orderNum: 'DESC', id: 'DESC', createDate: 'DESC' },
+      skip: size * (page - 1),
+      take: size,
+    })
     return ResultData.ok({ list: posts[0], total: posts[1] })
   }
   /** 查询单个岗位信息 */
