@@ -5,5 +5,6 @@
 # Except this file !
 
 /logs
+/upload
 
 desktop.files.json

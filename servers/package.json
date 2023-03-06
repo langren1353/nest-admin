@@ -60,7 +60,8 @@
     "swagger-ui-express": "^4.6.0",
     "ts-enum-util": "^4.0.2",
     "typeorm": "^0.3.11",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "vue-pdf": "^4.3.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.1.8",

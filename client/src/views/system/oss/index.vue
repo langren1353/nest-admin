@@ -7,7 +7,8 @@ import { defineComponent } from "vue";
         <el-upload
           class="upload-demo"
           ref="uploadCreateRef"
-          :on-change="raw => doUpload(raw)"
+          action="#"
+          :on-change="(raw) => doUpload(raw)"
           :auto-upload="false"
           :show-file-list="false"
           :limit="1"
@@ -16,23 +17,42 @@ import { defineComponent } from "vue";
         </el-upload>
       </div>
       <div class="filter-item">
-        <el-date-picker v-model="searchDate" type="daterange" value-format="YYYY-MM-DD" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :disabledDate="disabledDate" clearable></el-date-picker>
+        <el-date-picker
+          v-model="searchDate"
+          type="daterange"
+          value-format="YYYY-MM-DD"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :disabledDate="disabledDate"
+          clearable
+        ></el-date-picker>
       </div>
       <div class="filter-action-wrapper filter-item">
         <el-button type="primary" @click="searchEvent">搜索</el-button>
       </div>
     </div>
-    <k-table ref="ossTableRef" v-bind="fileData" :callback="getFileList" :loading="loading"  border stripe current-row-key="id" style="width: 100%">
-      <template  #url="{ row }">
+    <k-table
+      ref="ossTableRef"
+      v-bind="fileData"
+      :callback="getFileList"
+      :loading="loading"
+      border
+      stripe
+      current-row-key="id"
+      style="width: 100%"
+    >
+      <template #url="{ row }">
         <el-link type="primary" :href="row.url" target="_blank">
           {{ row.url }}
         </el-link>
       </template>
-      <template  #actions="{ row }">
+      <template #actions="{ row }">
         <el-upload
           class="upload-demo"
-          ref="uploadCreateRef"
-          :on-change="raw => doReUpload(raw, row)"
+          ref="uploadRenewRef"
+          action="#"
+          :on-change="(raw) => doReUpload(raw, row)"
           :auto-upload="false"
           :show-file-list="false"
           :limit="1"
@@ -57,7 +77,7 @@ import { UploadFile } from 'element-plus/es/components/upload/src/upload.type'
 import config from '@/config/index'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const fileData = ref<IKTableProps<OssApiResult>>({
       mode: 'config',
       data: { list: [], total: 0 },
@@ -67,10 +87,15 @@ export default defineComponent({
         { label: '文件', prop: 'url', width: 800, slot: true },
         { label: '用户', prop: 'userAccount' },
         { label: '大小', prop: 'size', formatter: (row: OssApiResult) => tranFileSize(row.size) },
-        { label: '上传时间', prop: 'createDate', width: 180, formatter: (row: OssApiResult) => jsonTimeFormat(row.createDate) },
-        { label: '操作', prop: 'actions', slot: true }
+        {
+          label: '上传时间',
+          prop: 'createDate',
+          width: 180,
+          formatter: (row: OssApiResult) => jsonTimeFormat(row.createDate),
+        },
+        { label: '操作', prop: 'actions', slot: true },
       ],
-      index: true
+      index: true,
     })
 
     const ossTableRef = ref()
@@ -82,12 +107,16 @@ export default defineComponent({
     let searchDateTmp: string[] = []
     const getFileList = async ({ page, size }: Pagination) => {
       loading.value = true
-      const res = await getFileListApi({ page, size, ...searchDateTmp.length === 2 ? { startDay: searchDateTmp[0], endDay: searchDateTmp[1] } : null })
+      const res = await getFileListApi({
+        page,
+        size,
+        ...(searchDateTmp.length === 2 ? { startDay: searchDateTmp[0], endDay: searchDateTmp[1] } : null),
+      })
       loading.value = false
       if (res?.code === 200) {
-        var data = res.data as ListResultData<OssApiResult>
-        data.list.forEach(one => {
-          one.url = `http://${location.host}/api/oss/view/${one.id}`
+        const data = res.data as ListResultData<OssApiResult>
+        data.list.forEach((one) => {
+          one.url = `http://${window.location.host}/api/oss/view/${one.id}`
         })
         fileData.value.data = data
       } else {
@@ -121,12 +150,13 @@ export default defineComponent({
       } else {
         ElMessage.error('上传失败')
       }
-      uploadCreateRef.value.clearFiles()
+      uploadCreateRef.value && uploadCreateRef.value.clearFiles()
       await getFileList(ossTableRef.value.pager)
     }
 
     const doReUpload = async (uploadFile: UploadFile, ossResult: OssApiResult) => {
-      return await doUpload(uploadFile, ossResult)
+      await doUpload(uploadFile, ossResult)
+      uploadRenewRef.value && uploadRenewRef.value.clearFiles()
     }
 
     const doDelete = async (row: OssApiResult) => {
@@ -150,8 +180,8 @@ export default defineComponent({
       disabledDate,
       doUpload,
       doReUpload,
-      doDelete
+      doDelete,
     }
-  }
+  },
 })
 </script>

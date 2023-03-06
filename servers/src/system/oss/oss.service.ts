@@ -50,6 +50,7 @@ export class OssService {
       // 千万别忘记了 关闭流
       writeFile.close()
       const ossFile = {
+        id: undefined,
         url: `${this.config.get<string>('app.file.domain')}${this.config.get<string>('app.file.serveRoot') || ''}/${newFileName}`,
         size: file.size,
         type: file.mimetype,
@@ -60,7 +61,7 @@ export class OssService {
       }
       
       if(ori_oss) {
-        // ossFile.url = ori_ossEntity.url // 网址也不变。。否则会导致文件读取异常
+        ossFile.id = ori_ossEntity.id // id保持不变，其他的可以丢
       }
       
       return plainToInstance(OssEntity, ossFile)
@@ -85,8 +86,10 @@ export class OssService {
     let delRes: OssEntity
     const result = await this.dataSource.manager.transaction(async (transactionalEntityManager) => {
       delRes = await this.ossRepo.findOne({where:{ id: ossData.id}})
-      // 先删除文件
-      await fs.unlinkSync(delRes.location)
+      try{
+        // 先删除文件，无论删除是否成功都行的
+        await fs.unlinkSync(delRes.location)
+      }catch (e){}
       // 再删除数据
       return await this.ossRepo.remove(delRes)
     })
