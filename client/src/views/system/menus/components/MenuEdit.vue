@@ -1,22 +1,39 @@
 <template>
-  <div class="menu-form-wrapper" >
+  <div class="menu-form-wrapper">
     <div class="menu-action">
-      <el-button type="primary" :disabled="isEditStatus || !currMenu?.id" @click="addOrUpdate('edit')" v-perm="'system_menus:edit'">编辑</el-button>
-      <el-button type="danger" :disabled="isEditStatus || !currMenu?.id" @click="delMenuFn" v-perm="'system_menus:del'">删除</el-button>
-      <el-button :disabled="isEditStatus"  @click="addOrUpdate('add')" v-perm="'system_menus:create'">添加</el-button>
+      <el-button
+        type="primary"
+        :disabled="isEditStatus || !currMenu?.id"
+        @click="addOrUpdate('edit')"
+        v-perm="'system_menus:edit'"
+        >编辑</el-button
+      >
+      <el-button type="danger" :disabled="isEditStatus || !currMenu?.id" @click="delMenuFn" v-perm="'system_menus:del'"
+        >删除</el-button
+      >
+      <el-button :disabled="isEditStatus" @click="addOrUpdate('add')" v-perm="'system_menus:create'">添加</el-button>
     </div>
-    <el-form ref="menuFormRef" class="menu-form" :model="menuForm" :rules="menuFormRules" label-width="100px" :disabled="!isEditStatus">
+    <el-form
+      ref="menuFormRef"
+      class="menu-form"
+      :model="menuForm"
+      :rules="menuFormRules"
+      label-width="100px"
+      :disabled="!isEditStatus"
+    >
       <el-form-item label="菜单名称" prop="name">
         <el-input v-model.trim="menuForm.name" placeholder="请输入菜单名称"></el-input>
       </el-form-item>
       <el-form-item label="上级菜单" prop="">
-        <el-button type="text" @click="isShowChecked = true">{{ menuObj[menuForm.parentId as string]?.name || '无' }}</el-button>
+        <el-button type="text" @click="isShowChecked = true">{{
+          menuObj[menuForm.parentId as string]?.name || '无'
+        }}</el-button>
       </el-form-item>
       <el-form-item label="唯一编码" prop="code">
         <el-input v-model.trim="menuForm.code" placeholder="唯一标识"></el-input>
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-select v-model="menuForm.type" placeholder="请选择类型" style="width: 250px;">
+        <el-select v-model="menuForm.type" placeholder="请选择类型" style="width: 250px">
           <el-option label="菜单" :value="1"></el-option>
           <el-option label="标签页" :value="2"></el-option>
         </el-select>
@@ -40,10 +57,18 @@
 
 <script lang="ts">
 import { defineComponent, inject, PropType, ref, watch } from 'vue'
-import { createMenu, delMenu, getOneMenuPerms, ICreateOrUpdateMenu, MenuApiResult, MenuPermApiResult, updateMenu } from '@/api/menu'
+import {
+  createMenu,
+  delMenu,
+  getOneMenuPerms,
+  ICreateOrUpdateMenu,
+  MenuApiResult,
+  MenuPermApiResult,
+  updateMenu,
+} from '@/api/menu'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import CheckMenuTree from './CheckMenuTree.vue'
 import ApiPermsSelect from './ApiPermsSelect.vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default defineComponent({
   components: { CheckMenuTree, ApiPermsSelect },
@@ -52,19 +77,19 @@ export default defineComponent({
       type: Object as PropType<ICreateOrUpdateMenu>,
       default: () => {
         return {}
-      }
+      },
     },
     allMenu: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     menuTree: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   emits: ['change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     // 当前选中 apiPerms
     const currApiPerms = ref<Array<string>>([])
     // 表单详情
@@ -72,27 +97,33 @@ export default defineComponent({
 
     // 获取父级菜单
     const menuObj = ref<Record<string, MenuApiResult>>({})
-    watch(() => props.allMenu as Array<MenuApiResult>, (val) => {
-      val.forEach(menu => {
-        menuObj.value[String(menu.id)] = menu as MenuApiResult
-      })
-    })
+    watch(
+      () => props.allMenu as Array<MenuApiResult>,
+      (val) => {
+        val.forEach((menu) => {
+          menuObj.value[String(menu.id)] = menu as MenuApiResult
+        })
+      },
+    )
     const menuPermObj = ref<Record<string, Array<string>>>({})
     const getOneMenuPermsFn = async (id: string) => {
       const res = await getOneMenuPerms(id)
       if (res?.code === 200) {
         const permList = res.data as Array<MenuPermApiResult>
-        menuPermObj.value[String(id)] = permList.map(perm => `${perm.apiMethod.toUpperCase()},${perm.apiUrl}`)
+        menuPermObj.value[String(id)] = permList.map((perm) => `${perm.apiMethod.toUpperCase()},${perm.apiUrl}`)
         currApiPerms.value = menuPermObj.value[String(id)]
       }
     }
 
     // 当前菜单改变
-    watch(() => props.currMenu as ICreateOrUpdateMenu, (val: ICreateOrUpdateMenu) => {
-      menuForm.value = val
-      currApiPerms.value = []
-      getOneMenuPermsFn(val.id as string)
-    })
+    watch(
+      () => props.currMenu as ICreateOrUpdateMenu,
+      (val: ICreateOrUpdateMenu) => {
+        menuForm.value = val
+        currApiPerms.value = []
+        getOneMenuPermsFn(val.id as string)
+      },
+    )
 
     // 表单操作
     const menuFormRef = ref() // 表单实例
@@ -100,7 +131,13 @@ export default defineComponent({
     const addOrUpdate = (type: 'edit' | 'add') => {
       if (type === 'add') {
         currApiPerms.value = []
-        menuForm.value = { parentId: props.currMenu?.id || '0', name: '', code: '', type: '', orderNum: 0 } as ICreateOrUpdateMenu
+        menuForm.value = {
+          parentId: props.currMenu?.id || '0',
+          name: '',
+          code: '',
+          type: '',
+          orderNum: 0,
+        } as ICreateOrUpdateMenu
       }
       isEditStatus.value = true
     }
@@ -120,10 +157,10 @@ export default defineComponent({
     const createOrUpdateMenuFn = async () => {
       const req: ICreateOrUpdateMenu = {
         ...menuForm.value,
-        menuPermList: currApiPerms.value.map(curr => {
+        menuPermList: currApiPerms.value.map((curr) => {
           const permObjArr = curr.split(',')
           return { apiMethod: permObjArr[0], apiUrl: permObjArr[1] } as MenuPermApiResult
-        })
+        }),
       }
       req.parentId = req.parentId || '0'
       let res
@@ -147,7 +184,7 @@ export default defineComponent({
         await ElMessageBox.confirm(`此操作将会永久删除【${props.currMenu.name}】菜单，是否继续`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         })
         const res = await delMenu(props.currMenu.id as string)
         if (res?.code === 200) {
@@ -166,15 +203,9 @@ export default defineComponent({
     }
 
     const menuFormRules = ref({
-      name: [
-        { required: true, message: '请输入菜单名称', trigger: 'blur' }
-      ],
-      code: [
-        { required: true, message: '请输入唯一编码', trigger: 'blur' }
-      ],
-      type: [
-        { required: true, message: '请选择类型', trigger: 'blur' }
-      ]
+      name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+      code: [{ required: true, message: '请输入唯一编码', trigger: 'blur' }],
+      type: [{ required: true, message: '请选择类型', trigger: 'blur' }],
     })
 
     return {
@@ -190,9 +221,9 @@ export default defineComponent({
       isShowChecked,
       checkedParentId,
       createOrUpdateEvent,
-      delMenuFn
+      delMenuFn,
     }
-  }
+  },
 })
 </script>
 

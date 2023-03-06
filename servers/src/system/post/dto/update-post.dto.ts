@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNumber, Min, IsOptional, IsNumberString, IsIn } from 'class-validator';
+import { IsString, IsNumber, Min, IsOptional, IsNumberString, IsIn } from 'class-validator'
 import { $enum } from 'ts-enum-util'
 
 import { StatusValue } from '../../../common/enums/common.enum'
 
 export class UpdatePostDto {
-
   @ApiProperty({ description: 'id' })
   @IsNumberString({}, { message: 'id 类型错误，正确类型 string' })
   readonly id: string
@@ -20,14 +19,14 @@ export class UpdatePostDto {
   @IsOptional()
   readonly code?: string
 
-  @ApiProperty({ description: '状态', enum: $enum(StatusValue).getValues(), required: false})
-  @IsNumber({}, { message: 'status 类型错误， 正确类型 number '})
+  @ApiProperty({ description: '状态', enum: $enum(StatusValue).getValues(), required: false })
+  @IsNumber({}, { message: 'status 类型错误， 正确类型 number ' })
   @IsIn($enum(StatusValue).getValues())
   @IsOptional()
   readonly status?: StatusValue
 
   @ApiProperty({ description: '排序', required: false })
-  @IsNumber({}, { message: 'orderNum 类型错误， 正确类型 number '})
+  @IsNumber({}, { message: 'orderNum 类型错误， 正确类型 number ' })
   @Min(0)
   @IsOptional()
   readonly orderNum?: number

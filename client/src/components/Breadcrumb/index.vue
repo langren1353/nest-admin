@@ -1,8 +1,10 @@
 <template>
-  <el-breadcrumb class="app-breadcrumb"  separator-class="el-icon-arrow-right">
+  <el-breadcrumb class="app-breadcrumb" separator-class="el-icon-arrow-right">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="item.path">
-        <span v-if="item.redirect === 'noRedirect' || index === levelList.length - 1" class="no-redirect">{{ item.meta.title }}</span>
+        <span v-if="item.redirect === 'noRedirect' || index === levelList.length - 1" class="no-redirect">{{
+          item.meta.title
+        }}</span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
@@ -17,7 +19,7 @@ import { RouteLocationMatched, useRoute, useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Breadcrumb',
-  setup () {
+  setup() {
     const currRoute = computed(() => useRoute())
 
     const pathCompile = (path: string): string => {
@@ -35,7 +37,7 @@ export default defineComponent({
     }
     // 是否是首页
     const isDashboard = (route: RouteLocationMatched | AppRouteRecordRaw): boolean => {
-      const name = route && route.name as string
+      const name = route && (route.name as string)
       if (!name) return false
       return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
     }
@@ -43,11 +45,13 @@ export default defineComponent({
     const levelList = ref<Array<AppRouteRecordRaw | RouteLocationMatched>>()
 
     const getBreadcrumb = () => {
-      const matched: Array<AppRouteRecordRaw | RouteLocationMatched> = currRoute.value.matched.filter(v => v.meta?.title)
+      const matched: Array<AppRouteRecordRaw | RouteLocationMatched> = currRoute.value.matched.filter(
+        (v) => v.meta?.title,
+      )
       const first = matched[0]
       const dashboard = { path: '/dashboard', meta: { title: '首页' } } as AppRouteRecordRaw
       if (!isDashboard(first)) matched.unshift(dashboard)
-      levelList.value = matched.filter(v => v.meta && v.meta.title && !v.meta.breadcrumb)
+      levelList.value = matched.filter((v) => v.meta && v.meta.title && !v.meta.breadcrumb)
     }
 
     // watch(currRoute.value, () => { getBreadcrumb() })
@@ -60,9 +64,9 @@ export default defineComponent({
     return {
       levelList,
       handleLink,
-      getBreadcrumb
+      getBreadcrumb,
     }
-  }
+  },
 })
 </script>
 

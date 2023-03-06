@@ -15,7 +15,7 @@
             v-for="role in roleData"
             :key="role.id"
             @click="roleClickEvent(role)"
-            >
+          >
             {{ role.name }}
           </li>
         </ul>
@@ -37,7 +37,7 @@ import RoleUserList from './components/roleUserList/index.vue'
 
 export default defineComponent({
   components: { RoleInfo, RoleUserList },
-  setup () {
+  setup() {
     const loading = ref<boolean>(false)
     const roleData = ref<Array<RoleApiResult>>([])
     const currRole = ref<RoleApiResult>({ id: '', name: '', remark: '' })
@@ -77,9 +77,9 @@ export default defineComponent({
       currRole,
       roleClickEvent,
       addRoleEvent,
-      roleChange
+      roleChange,
     }
-  }
+  },
 })
 </script>
 
@@ -88,7 +88,7 @@ export default defineComponent({
   display: flex;
   flex-wrap: nowrap;
   padding: 0;
-  background: rgba(245, 245, 245, .6);
+  background: rgba(245, 245, 245, 0.6);
 }
 
 :deep(.roles__tip) {

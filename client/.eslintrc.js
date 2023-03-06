@@ -1,4 +1,5 @@
 const { defineConfig } = require('eslint-define-config')
+const tsEslint = require('./ts.eslint')
 
 module.exports = defineConfig({
   root: true,
@@ -92,6 +93,8 @@ module.exports = defineConfig({
     'arrow-spacing': 'error',
     // 只强制对象解构，不强制数组解构
     'prefer-destructuring': ['error', { object: true, array: false }],
+
+    ...tsEslint,
   },
   overrides: [
     {

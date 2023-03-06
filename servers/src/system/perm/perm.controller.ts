@@ -24,18 +24,18 @@ export class PermController {
   }
 
   @Get('user')
-  @ApiOperation({ summary: '获取用户权限所有接口路由列表'})
+  @ApiOperation({ summary: '获取用户权限所有接口路由列表' })
   @ApiResult(RouteDto, true)
-  async findUserRoutes (@Req() req): Promise<ResultData> {
+  async findUserRoutes(@Req() req): Promise<ResultData> {
     const appRoutes = await this.permService.findUserPerms(req.user.id)
     return ResultData.ok(appRoutes)
   }
 
   @Get('menu')
-  @ApiOperation({ summary: '用户权限'})
+  @ApiOperation({ summary: '用户权限' })
   @ApiResult(MenuEntity, true)
-  async findUser (@Req() req): Promise<ResultData> {
-    const menuPerms =  await this.permService.findUserMenus(req.user.id, req.user.type)
+  async findUser(@Req() req): Promise<ResultData> {
+    const menuPerms = await this.permService.findUserMenus(req.user.id, req.user.type)
     return ResultData.ok(menuPerms)
   }
 }

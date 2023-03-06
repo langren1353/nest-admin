@@ -7,7 +7,7 @@ import {
   GetterTree,
   Module,
   MutationTree,
-  Store as VuexStore
+  Store as VuexStore,
 } from 'vuex'
 import { RootState } from '../index'
 
@@ -19,7 +19,7 @@ export enum AppMutatinContants {
 }
 
 export enum AppActionContants {
-  TOGGLE_SIDEBAR = 'app/toggleSideBar'
+  TOGGLE_SIDEBAR = 'app/toggleSideBar',
 }
 
 export interface SideBar {
@@ -40,10 +40,10 @@ export type AppState = {
 const state: AppState = {
   sidebar: {
     opened: sessionStorage.getItem('sidebarStatus') ? !!Number(sessionStorage.getItem('sidebarStatus')) : true,
-    withoutAnimation: false
+    withoutAnimation: false,
   },
   device: 'desktop',
-  size: sessionStorage.getItem('size') as Size || 'small'
+  size: (sessionStorage.getItem('size') as Size) || 'small',
 }
 
 interface AppMutation {
@@ -54,7 +54,7 @@ interface AppMutation {
 }
 
 const mutations: MutationTree<AppState> & AppMutation = {
-  [AppMutatinContants.TOGGLE_SIDEBAR]: state => {
+  [AppMutatinContants.TOGGLE_SIDEBAR]: (state) => {
     state.sidebar.opened = !state.sidebar.opened
     state.sidebar.withoutAnimation = false
     if (state.sidebar.opened) {
@@ -74,7 +74,7 @@ const mutations: MutationTree<AppState> & AppMutation = {
   [AppMutatinContants.STE_SIZE]: (state, size) => {
     state.size = size
     sessionStorage.setItem('size', size)
-  }
+  },
 }
 
 type AugmentedActionContext = {
@@ -89,38 +89,37 @@ interface AppAction {
 }
 
 const actions: ActionTree<AppState, RootState> & AppAction = {
-  toggleSideBar ({ commit }): void {
+  toggleSideBar({ commit }): void {
     commit(AppMutatinContants.TOGGLE_SIDEBAR)
   },
-  closeSideBar ({ commit }, { withoutAnimation }): void {
+  closeSideBar({ commit }, { withoutAnimation }): void {
     commit(AppMutatinContants.CLOSE_SIDEBAR, withoutAnimation)
   },
-  toggleDevice ({ commit }, device: Device): void {
+  toggleDevice({ commit }, device: Device): void {
     commit(AppMutatinContants.TOGGLE_DEVICE, device)
   },
-  setSize ({ commit }, size: Size): void {
+  setSize({ commit }, size: Size): void {
     commit(AppMutatinContants.STE_SIZE, size)
-  }
+  },
 }
 
-export type AppStore<S = AppState> = Omit<
-  VuexStore<S>, 'commit'| 'dispatch'> & {
-    commit<K extends keyof AppMutation, P extends Parameters<AppMutation[K]>[1]>(
-      key: K,
-      payload?: P,
-      options?: CommitOptions
-    ): ReturnType<AppMutation[K]>
-  } & {
-    dispatch<K extends keyof AppAction, P extends Parameters<AppAction[K]>[1]>(
-      key: K,
-      payload?: P,
-      options?: DispatchOptions
-    ): ReturnType<AppAction[K]>
-  }
+export type AppStore<S = AppState> = Omit<VuexStore<S>, 'commit' | 'dispatch'> & {
+  commit<K extends keyof AppMutation, P extends Parameters<AppMutation[K]>[1]>(
+    key: K,
+    payload?: P,
+    options?: CommitOptions,
+  ): ReturnType<AppMutation[K]>
+} & {
+  dispatch<K extends keyof AppAction, P extends Parameters<AppAction[K]>[1]>(
+    key: K,
+    payload?: P,
+    options?: DispatchOptions,
+  ): ReturnType<AppAction[K]>
+}
 
 export const AppModule: Module<AppState, RootState> = {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 }

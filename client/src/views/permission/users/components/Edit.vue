@@ -1,11 +1,19 @@
 <template>
-  <el-dialog title="用户信息编辑" v-model="visible" top="10vh" width="500px" :before-close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog
+    title="用户信息编辑"
+    v-model="visible"
+    top="10vh"
+    width="500px"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
     <el-form ref="userFormRef" :model="userForm" label-width="80px" :rules="userFormRules" v-loading="loading">
       <el-form-item label="帐号" prop="">
         <el-input v-model="userForm.account" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item label="头像" prop="avatar">
-        <el-avatar :src='userForm.avatar' style="cursor: pointer;" @click="avatarClickEvent"></el-avatar>
+        <el-avatar :src="userForm.avatar" style="cursor: pointer" @click="avatarClickEvent"></el-avatar>
       </el-form-item>
       <el-form-item label="手机号" prop="phoneNum">
         <el-input v-model.trim="userForm.phoneNum"></el-input>
@@ -15,7 +23,7 @@
       </el-form-item>
       <el-form-item label="角色" prop="roleIds">
         <!-- 编辑框打开过一次，当用户角色id集合为[]时，下拉框选中不重置，使用 v-if 修复 -->
-        <el-select v-if='visible' v-model="userForm.roleIds" placeholder="请选择角色" multiple clearable>
+        <el-select v-if="visible" v-model="userForm.roleIds" placeholder="请选择角色" multiple clearable>
           <el-option v-for="role in allRoles" :key="role.id" :label="role.name" :value="role.id"></el-option>
         </el-select>
       </el-form-item>
@@ -37,7 +45,12 @@ import { ElMessage } from 'element-plus'
 import { UPDATE_MODEL_EVENT } from '@/common/contants'
 import { validPhone, validEmail } from '@/utils/validate'
 
-import { ICreateOrUpdateUser, getUserInfo as getUserInfoApi, updateUser, getUserRoleIds as getUserRoleIdsApi } from '@/api/user'
+import {
+  ICreateOrUpdateUser,
+  getUserInfo as getUserInfoApi,
+  updateUser,
+  getUserRoleIds as getUserRoleIdsApi,
+} from '@/api/user'
 import { RoleApiResult } from '@/api/role'
 
 import AvatarCropper from './AvatarCropper.vue'
@@ -48,21 +61,21 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     currId: {
       type: String,
       default: () => {
         return null
-      }
+      },
     },
     allRoles: {
       type: Array as PropType<RoleApiResult[]>,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   emits: [UPDATE_MODEL_EVENT, 'change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const userFormRef = ref()
 
     const loading = ref(false)
@@ -72,7 +85,7 @@ export default defineComponent({
       phoneNum: '',
       email: '',
       avatar: '',
-      roleIds: []
+      roleIds: [],
     }
     // 表单
     const userForm = ref<ICreateOrUpdateUser>({ ...userFormDefault })
@@ -98,20 +111,16 @@ export default defineComponent({
     }
 
     const userFormRules = {
-      avatar: [
-        { required: true, message: '请上传头像', trigger: 'blur' }
-      ],
+      avatar: [{ required: true, message: '请上传头像', trigger: 'blur' }],
       phoneNum: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
-        { validator: validPhoneNum, trigger: 'blur' }
+        { validator: validPhoneNum, trigger: 'blur' },
       ],
       email: [
         { required: true, message: '请输入邮箱', trigger: 'blur' },
-        { validator: validEmailFn, trigger: 'blur' }
+        { validator: validEmailFn, trigger: 'blur' },
       ],
-      roleIds: [
-        { type: 'array', required: true, message: '请至少选择一个角色', trigger: 'blur' }
-      ]
+      roleIds: [{ type: 'array', required: true, message: '请至少选择一个角色', trigger: 'blur' }],
     }
 
     const getUserInfo = async (currId: string) => {
@@ -159,16 +168,19 @@ export default defineComponent({
 
     // dialog
     const visible = ref<boolean>(false)
-    watch(() => props.modelValue, (val: boolean) => {
-      visible.value = val
-      if (val) {
-        userForm.value = { ...userFormDefault }
-      }
-      if (val && props.currId) {
-        getUserInfo(props.currId)
-        getUserRoleIds(props.currId)
-      }
-    })
+    watch(
+      () => props.modelValue,
+      (val: boolean) => {
+        visible.value = val
+        if (val) {
+          userForm.value = { ...userFormDefault }
+        }
+        if (val && props.currId) {
+          getUserInfo(props.currId)
+          getUserRoleIds(props.currId)
+        }
+      },
+    )
 
     return {
       loading,
@@ -180,8 +192,8 @@ export default defineComponent({
       updateOrCreate,
       showAvatarCropper,
       avatarClickEvent,
-      uploadSuccess
+      uploadSuccess,
     }
-  }
+  },
 })
 </script>

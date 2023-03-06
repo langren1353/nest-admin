@@ -1,26 +1,14 @@
-import {
-  Controller,
-  Get,
-  Post,
-  UploadedFile,
-  UseInterceptors,
-  Query,
-  HttpCode,
-  Body,
-  Req,
-  Delete,
-  Param, Response, StreamableFile
-} from '@nestjs/common'
-import { FileInterceptor } from "@nestjs/platform-express"
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiExtraModels, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, UploadedFile, UseInterceptors, Query, HttpCode, Body, Req, Delete, Param, Response, StreamableFile } from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiExtraModels, ApiBearerAuth } from '@nestjs/swagger'
 
 import { ResultData } from '../../common/utils/result'
 
-import { OssService } from "./oss.service"
+import { OssService } from './oss.service'
 import { FindOssDto } from './dto/find-oss.dto'
 import { ApiResult } from '../../common/decorators/api-result.decorator'
 import { OssEntity } from './oss.entity'
-import {AllowAnon} from "../../common/decorators/allow-anon.decorator";
+import { AllowAnon } from '../../common/decorators/allow-anon.decorator'
 
 @ApiTags('文件存储')
 @ApiBearerAuth()
@@ -50,21 +38,21 @@ export class OssController {
           description: '原始oss描述',
           type: 'object',
           format: 'json',
-        }
+        },
       },
     },
   })
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   @ApiResult(OssEntity)
-  async uploadFile (@UploadedFile() file: Express.Multer.File, @Body() params: { business: string, ori_oss: string }, @Req() req): Promise<ResultData> {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() params: { business: string; ori_oss: string }, @Req() req): Promise<ResultData> {
     return await this.ossService.create([file], params.business || '', params.ori_oss, req.user)
   }
 
   @Get('list')
   @ApiOperation({ summary: '查询文件上传列表' })
   @ApiResult(OssEntity, true, true)
-  async findList (@Query() search: FindOssDto): Promise<ResultData> {
+  async findList(@Query() search: FindOssDto): Promise<ResultData> {
     return await this.ossService.findList(search)
   }
 
@@ -74,11 +62,11 @@ export class OssController {
   async deleteItem(@Query() item: OssEntity): Promise<ResultData> {
     return await this.ossService.delete(item)
   }
-  
+
   @Get('view/:id')
   @AllowAnon()
   async getFileById(@Param('id') id: number, @Response({ passthrough: true }) resp): Promise<StreamableFile> {
-    console.log("输出文件了")
+    console.log('输出文件了')
     return await this.ossService.getView(id, resp)
   }
 }

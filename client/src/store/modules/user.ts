@@ -6,24 +6,24 @@ import {
   GetterTree,
   Module,
   MutationTree,
-  Store as VuexStore
+  Store as VuexStore,
 } from 'vuex'
 import { ResultData } from '@/common/types/apiResult.type'
-import { RootState } from '../index'
 import { login, UserApiResult, UserLogin, getUserInfo as getUserInfoApi } from '@/api/user'
 import { PermApiResult, getCurrUserMenuPerms, getAllApiPerms } from '@/api/perm'
 import { MenuTypeContants, MenuApiResult } from '@/api/menu'
+import { RootState } from '../index'
 
 export enum UserMutationContants {
   SET_USER = 'SET_USER',
   SET_PERMSMENU = 'SET_PERMSMENUS',
-  SET_ALLAPIPERMS = 'SET_APIPERMS'
+  SET_ALLAPIPERMS = 'SET_APIPERMS',
 }
 
 export enum UserActionContants {
   GET_USER_INFO = 'user/getUserInfo',
   GET_USER_MENU_PERM = 'user/getCurrUserMenuPerm',
-  GET_ALL_API_PERMS = 'user/getAllApiPerms'
+  GET_ALL_API_PERMS = 'user/getAllApiPerms',
 }
 
 export interface UserState {
@@ -39,7 +39,7 @@ const state: UserState = {
   permMenus: [],
   permButton: [],
   permTabs: [],
-  allApiPerms: []
+  allApiPerms: [],
 }
 
 interface UserMutation {
@@ -53,7 +53,7 @@ const mutations: MutationTree<UserState> & UserMutation = {
     state.user = user
   },
   [UserMutationContants.SET_PERMSMENU]: (state: UserState, permSource: MenuApiResult[]) => {
-    permSource.forEach(v => {
+    permSource.forEach((v) => {
       switch (v.type) {
         case MenuTypeContants.MENU:
           state.permMenus.push(v)
@@ -71,11 +71,11 @@ const mutations: MutationTree<UserState> & UserMutation = {
   },
   [UserMutationContants.SET_ALLAPIPERMS]: (state: UserState, apiPerms: Array<PermApiResult>) => {
     state.allApiPerms = apiPerms
-  }
+  },
 }
 
 type AugmentedActionContext = {
-  state: UserState,
+  state: UserState
   commit<K extends keyof UserMutation>(key: K, payload?: Parameters<UserMutation[K]>[1]): ReturnType<UserMutation[K]>
 } & Omit<ActionContext<UserState, RootState>, 'commit' | 'state'>
 
@@ -114,21 +114,20 @@ const actions: ActionTree<UserState, RootState> & UserAction = {
       return apiPerms
     }
     return []
-  }
+  },
 }
 
-export type UserStore<S = UserState> = Omit<
-VuexStore<S>, 'commit' | 'dispatch'> & {
+export type UserStore<S = UserState> = Omit<VuexStore<S>, 'commit' | 'dispatch'> & {
   commit<K extends keyof UserMutation, P extends Parameters<UserMutation[K]>[1]>(
     key: K,
     payload?: P,
-    options?: CommitOptions
+    options?: CommitOptions,
   ): ReturnType<UserMutation[K]>
 } & {
   dispatch<K extends keyof UserAction, P extends Parameters<UserAction[K]>[1]>(
     key: K,
     payload?: P,
-    options?: DispatchOptions
+    options?: DispatchOptions,
   ): ReturnType<UserAction[K]>
 }
 
@@ -136,5 +135,5 @@ export const UserModule: Module<UserState, RootState> = {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
 }

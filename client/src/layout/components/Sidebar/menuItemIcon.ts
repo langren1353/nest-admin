@@ -6,10 +6,10 @@ export default defineComponent({
   props: {
     icon: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
-  setup (props) {
+  setup(props) {
     const { icon } = toRefs(props)
     const vnodes: VNode[] = []
 
@@ -17,5 +17,5 @@ export default defineComponent({
       vnodes.push(h(SvgIcon, { iconClass: icon.value, style: 'font-size: 18px; vertical-align: middle;' }))
     }
     return () => vnodes
-  }
+  },
 })

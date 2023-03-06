@@ -1,7 +1,7 @@
 import { PaginationProps } from 'element-plus'
 // import { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 export interface IPager {
-  page: number,
+  page: number
   size: number
 }
 
@@ -43,21 +43,21 @@ export interface IKTableColumn {
 }
 
 export interface IKTableProps<T> {
-  mode?: 'config' | 'render',
-  auto?: boolean,
-  callack?: ITableCallBack,
-  loading?: boolean,
+  mode?: 'config' | 'render'
+  auto?: boolean
+  callack?: ITableCallBack
+  loading?: boolean
   data: {
-    list: Array<T>,
+    list: Array<T>
     total?: number
-  },
-  isPager?: boolean,
-  pageNum?: number,
-  pageSize?: number,
-  pagination?: PaginationProps,
-  columns: IKTableColumn[],
-  selection?: boolean,
-  index?: boolean,
-  indexMethod?: IIndexMethod,
+  }
+  isPager?: boolean
+  pageNum?: number
+  pageSize?: number
+  pagination?: PaginationProps
+  columns: IKTableColumn[]
+  selection?: boolean
+  index?: boolean
+  indexMethod?: IIndexMethod
   indexLabel?: string
 }

@@ -21,7 +21,7 @@ export default defineComponent({
     // transition名称，用来定制动画
     name: {
       type: String,
-      default: 'k-lazy'
+      default: 'k-lazy',
     },
     // 适配父容器
     fit: Boolean,
@@ -32,42 +32,42 @@ export default defineComponent({
       type: typeof window !== 'undefined' ? window.HTMLElement : Object,
       default: () => {
         return null
-      }
+      },
     },
     // 预加载阈值
     threshold: {
       type: [String, Number],
-      default: 0
+      default: 0,
     },
     // 视口的滚动方向， vertical 代表垂直方向， horizontal 代表水平方向
     direction: {
       type: String,
       default: 'vertical',
-      validator (val) {
+      validator(val) {
         return ['vertical', 'horizontal'].includes(val)
-      }
+      },
     },
     maxWaittingTime: {
       type: Number,
-      default: 100
-    }
+      default: 100,
+    },
   },
-  data () {
+  data() {
     return {
       isInit: false,
       io: null,
-      timer: null
+      timer: null,
     }
   },
   computed: {
-    classes () {
+    classes() {
       return {
         'k-lazy': true,
-        'is-fit': this.fit
+        'is-fit': this.fit,
       }
-    }
+    },
   },
-  created () {
+  created() {
     // 如果指定 timeout 则无论可见与否都是在 timeout 之后初始化
     if (this.timeout) {
       this.timer = setTimeout(() => {
@@ -75,7 +75,7 @@ export default defineComponent({
       }, this.timeout)
     }
   },
-  mounted () {
+  mounted() {
     if (this.timeout) return
     // 根据滚动方向来构造视口外边距，用于提前加载
     let rootMargin
@@ -92,21 +92,21 @@ export default defineComponent({
       this.io = new window.IntersectionObserver(this.intersectionHandler, {
         rootMargin,
         root: this.viewport,
-        threshold: [0, Number.MIN_VALUE, 0.01]
+        threshold: [0, Number.MIN_VALUE, 0.01],
       })
       this.io.observe(this.$el)
     } catch (e) {
       this.init()
     }
   },
-  beforeUnmount () {
+  beforeUnmount() {
     // 在组件销毁前取消观察
     this.io && this.io.unobserve(this.$el)
     this.timer && clearTimeout(this.timer)
   },
   methods: {
     // 交叉情况变化处理函数
-    intersectionHandler (entries) {
+    intersectionHandler(entries) {
       // 正在交叉 || 交叉率大于0
       if (entries[0].isIntersecting || entries[0].intersectionRatio > 0) {
         this.init()
@@ -114,7 +114,7 @@ export default defineComponent({
       }
     },
     // 组件和骨架屏切换
-    init () {
+    init() {
       // 由于函数会在主线程执行，加载懒加载组件非常耗时，容易卡顿
       // 所以在 requestAnimationFrame 回调中 延后执行
       this.requestAnimationFrame(() => {
@@ -123,7 +123,7 @@ export default defineComponent({
         this.$emit('init')
       })
     },
-    requestAnimationFrame (callback) {
+    requestAnimationFrame(callback) {
       // 防止等待台阶没有执行回调
       // 设置最大等待时间
       setTimeout(() => {
@@ -132,7 +132,7 @@ export default defineComponent({
       }, this.maxWaittingTime)
       // 兼容不支持 requestAnimationFrame 的浏览器
       return (window.requestAnimationFrame || ((callback) => setTimeout(callback, 1000 / 60)))(callback)
-    }
-  }
+    },
+  },
 })
 </script>

@@ -12,16 +12,15 @@
 import { defineComponent, ref, provide } from 'vue'
 import { ElMessage } from 'element-plus'
 
+import { arrToTree } from '@/utils'
+import { DeptApiResult, DeptTreeName, getDeptList, ICreateOrUpdateDept } from '@/api/dept'
 import DeptTree from './components/DeptTree.vue'
 import DeptEdit from './components/DeptEdit.vue'
 import DeptUserList from './components/DeptUserList.vue'
 
-import { arrToTree } from '@/utils'
-import { DeptApiResult, DeptTreeName, getDeptList, ICreateOrUpdateDept } from '@/api/dept'
-
 export default defineComponent({
   components: { DeptTree, DeptEdit, DeptUserList },
-  setup () {
+  setup() {
     const loading = ref<boolean>(false)
     // 查询所有部门集合，并将转换成 tree json 结构
     const deptTree = ref<DeptApiResult[]>([])
@@ -55,9 +54,9 @@ export default defineComponent({
       loading,
       currDept,
       selectChangeEvent,
-      deptChange
+      deptChange,
     }
-  }
+  },
 })
 </script>
 
@@ -66,7 +65,7 @@ export default defineComponent({
   display: flex;
   flex-wrap: nowrap;
   padding: 0;
-  background: rgba(245, 245, 245, .6);
+  background: rgba(245, 245, 245, 0.6);
 }
 .dept-content {
   width: calc(100% - 210px);

@@ -1,5 +1,13 @@
 <template>
-  <el-dialog title="按钮编辑" v-model="visible" width="500px" top="10vh" :before-close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog
+    title="按钮编辑"
+    v-model="visible"
+    width="500px"
+    top="10vh"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
     <el-form ref="btnFormRef" :model="btnForm" :rules="btnFormRules" label-width="80px" v-loading="loading">
       <el-form-item label="按钮名称" prop="name">
         <el-input v-model.trim="btnForm.name"></el-input>
@@ -34,26 +42,29 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      defeault: false
+      defeault: false,
     },
     parent: {
       type: Object,
       default: () => {
         return {}
-      }
+      },
     },
     currBtn: {
       type: Object as PropType<ICreateOrUpdateMenu>,
-      default: () => null
-    }
+      default: () => null,
+    },
   },
   emits: [UPDATE_MODEL_EVENT, 'change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     // dialog
     const visible = ref<boolean>(false)
-    watch(() => props.modelValue, (val) => {
-      visible.value = val
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        visible.value = val
+      },
+    )
     const handleClose = () => {
       emit(UPDATE_MODEL_EVENT, false)
     }
@@ -67,7 +78,7 @@ export default defineComponent({
       loading.value = false
       if (res?.code === 200) {
         const permList = res.data as Array<MenuPermApiResult>
-        currApiPerms.value = permList.map(perm => `${perm.apiMethod.toUpperCase()},${perm.apiUrl}`)
+        currApiPerms.value = permList.map((perm) => `${perm.apiMethod.toUpperCase()},${perm.apiUrl}`)
       }
     }
 
@@ -76,23 +87,26 @@ export default defineComponent({
     const btnForm = ref<ICreateOrUpdateMenu>({
       name: '',
       code: '',
-      orderNum: 0
+      orderNum: 0,
     })
 
-    watch(() => props.modelValue, (val) => {
-      if (val) {
-        if (btnFormRef.value) {
-          btnFormRef.value.clearValidate()
-          btnFormRef.value.resetFields()
+    watch(
+      () => props.modelValue,
+      (val) => {
+        if (val) {
+          if (btnFormRef.value) {
+            btnFormRef.value.clearValidate()
+            btnFormRef.value.resetFields()
+          }
+          btnForm.value = props.currBtn || { name: '', code: '', orderNum: 0 }
+          if (btnForm.value.id) {
+            getOneMenuPermsFn(btnForm.value.id as string)
+          } else {
+            currApiPerms.value = []
+          }
         }
-        btnForm.value = props.currBtn || { name: '', code: '', orderNum: 0 }
-        if (btnForm.value.id) {
-          getOneMenuPermsFn(btnForm.value.id as string)
-        } else {
-          currApiPerms.value = []
-        }
-      }
-    })
+      },
+    )
 
     const createOrUpdateBtnFn = async () => {
       const req: ICreateOrUpdateMenu = {
@@ -100,10 +114,10 @@ export default defineComponent({
         type: 3,
         parentId: props.parent.id || '0',
         orderNum: 0,
-        menuPermList: currApiPerms.value.map(curr => {
+        menuPermList: currApiPerms.value.map((curr) => {
           const permObjArr = curr.split(',')
           return { apiMethod: permObjArr[0], apiUrl: permObjArr[1] } as MenuPermApiResult
-        })
+        }),
       }
       req.parentId = req.parentId || '0'
       let res
@@ -130,12 +144,8 @@ export default defineComponent({
     }
 
     const btnFormRules = ref({
-      name: [
-        { required: true, message: '请输入菜单名称', trigger: 'blur' }
-      ],
-      code: [
-        { required: true, message: '请输入唯一编码', trigger: 'blur' }
-      ]
+      name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
+      code: [{ required: true, message: '请输入唯一编码', trigger: 'blur' }],
     })
 
     return {
@@ -146,8 +156,8 @@ export default defineComponent({
       currApiPerms,
       btnFormRules,
       confirmEvent,
-      loading
+      loading,
     }
-  }
+  },
 })
 </script>

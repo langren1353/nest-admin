@@ -1,5 +1,13 @@
 <template>
-  <el-dialog title="岗位信息编辑" v-model="visible" top="10vh" width="500px" :before-close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog
+    title="岗位信息编辑"
+    v-model="visible"
+    top="10vh"
+    width="500px"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
     <k-form v-if="visible" ref="postFormRef" v-bind="formOptions" v-model="postForm" v-loading="loading"></k-form>
     <template #footer>
       <el-button @click="handleClose" :loading="loading">取消</el-button>
@@ -19,22 +27,22 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     curr: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   emits: [UPDATE_MODEL_EVENT, 'change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const loading = ref<boolean>(false)
     const postFormDefault = {
       name: '',
       code: '',
       status: 1,
       orderNum: 0,
-      remark: ''
+      remark: '',
     }
     const postForm = ref<ICreateOrUpdatePost>({ ...postFormDefault })
 
@@ -51,22 +59,23 @@ export default defineComponent({
           component: 'radio',
           options: [
             { label: 1, content: '正常' },
-            { label: 0, content: '停用' }
-          ]
+            { label: 0, content: '停用' },
+          ],
         },
-        { label: '备注：', prop: 'remark', component: 'input', type: 'textarea', rows: 4, placeholder: '请输入岗位备注' }
+        {
+          label: '备注：',
+          prop: 'remark',
+          component: 'input',
+          type: 'textarea',
+          rows: 4,
+          placeholder: '请输入岗位备注',
+        },
       ],
       rules: {
-        name: [
-          { required: true, message: '请输入岗位名称', trigger: 'blur' }
-        ],
-        code: [
-          { required: true, message: '请输入岗位名称', trigger: 'blur' }
-        ],
-        status: [
-          { required: true, message: '请选择岗位状态', trigger: 'blur' }
-        ]
-      }
+        name: [{ required: true, message: '请输入岗位名称', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入岗位名称', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择岗位状态', trigger: 'blur' }],
+      },
     })
 
     const handleClose = () => {
@@ -110,13 +119,16 @@ export default defineComponent({
 
     // dialog
     const visible = ref<boolean>(false)
-    watch(() => props.modelValue, (val: boolean) => {
-      visible.value = val
-      if (val) {
-        postForm.value = { ...postFormDefault }
-        props.curr && getPostInfo()
-      }
-    })
+    watch(
+      () => props.modelValue,
+      (val: boolean) => {
+        visible.value = val
+        if (val) {
+          postForm.value = { ...postFormDefault }
+          props.curr && getPostInfo()
+        }
+      },
+    )
 
     return {
       visible,
@@ -125,8 +137,8 @@ export default defineComponent({
       formOptions,
       postForm,
       postFormRef,
-      confirmEvent
+      confirmEvent,
     }
-  }
+  },
 })
 </script>

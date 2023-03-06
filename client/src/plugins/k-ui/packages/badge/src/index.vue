@@ -16,14 +16,14 @@ export default defineComponent({
     type: {
       type: String,
       default: 'primary',
-      validator: val => {
+      validator: (val) => {
         return ['primary', 'success', 'warning', 'info', 'danger'].includes(val)
-      }
+      },
     },
     content: {
       type: String,
-      default: ''
-    }
-  }
+      default: '',
+    },
+  },
 })
 </script>

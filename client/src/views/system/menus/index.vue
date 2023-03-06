@@ -2,7 +2,14 @@
   <div class="menu-container">
     <div class="menu-tree-wrapper" v-loading="loading">
       <el-scrollbar>
-        <el-tree :data="menuTree" :props="{ label: 'name', children: 'children', disabled: 'disabled' }" node-key="id" highlight-current default-expand-all @node-click="menuClickEvent"></el-tree>
+        <el-tree
+          :data="menuTree"
+          :props="{ label: 'name', children: 'children', disabled: 'disabled' }"
+          node-key="id"
+          highlight-current
+          default-expand-all
+          @node-click="menuClickEvent"
+        ></el-tree>
       </el-scrollbar>
     </div>
     <div class="menu-content">
@@ -21,7 +28,7 @@ import MenuEdit from './components/MenuEdit.vue'
 
 export default defineComponent({
   components: { BtnList, MenuEdit },
-  setup () {
+  setup() {
     // 菜单树
     const menuTree = ref<Array<MenuApiResult>>([])
     const loading = ref<boolean>(false)
@@ -56,9 +63,9 @@ export default defineComponent({
       menuClickEvent,
       allMenu,
       currMenu,
-      createOrUpdateSuccess
+      createOrUpdateSuccess,
     }
-  }
+  },
 })
 </script>
 
@@ -68,7 +75,7 @@ export default defineComponent({
   display: flex;
   flex-wrap: nowrap;
   padding: 0;
-  background: rgba(245, 245, 245, .6);
+  background: rgba(245, 245, 245, 0.6);
 }
 .menu-tree-wrapper {
   width: 200px;
@@ -82,5 +89,4 @@ export default defineComponent({
   margin-left: 10px;
   height: 100%;
 }
-
 </style>

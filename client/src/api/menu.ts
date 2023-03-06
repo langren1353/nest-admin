@@ -5,7 +5,7 @@ import { BaseResult, ResultData, ApiMethodContants } from '@/common/types/apiRes
 export enum MenuTypeContants {
   MENU = 1,
   TAB = 2,
-  BUTTON = 3
+  BUTTON = 3,
 }
 
 /** 接口返回菜单类型 */
@@ -41,54 +41,54 @@ export interface ICreateOrUpdateMenu {
   children?: ICreateOrUpdateMenu[]
 }
 
-export function getAllMenu (hasBtn?: 0 | 1): Promise<ResultData<Array<MenuApiResult>>> {
+export function getAllMenu(hasBtn?: 0 | 1): Promise<ResultData<Array<MenuApiResult>>> {
   return http.request<ResultData<Array<MenuApiResult>>>({
     url: `${config.api.baseUrl}/menu/all`,
     method: ApiMethodContants.GET,
-    params: { hasBtn: hasBtn || 0 }
+    params: { hasBtn: hasBtn || 0 },
   })
 }
 
-export function getMenuInfo (id: string): Promise<ResultData<MenuApiResult>> {
+export function getMenuInfo(id: string): Promise<ResultData<MenuApiResult>> {
   return http.request<ResultData<MenuApiResult>>({
     url: `${config.api.baseUrl}/menu/one/${id}`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }
 
-export function getOneMenuBtns (id: string): Promise<ResultData<Array<MenuApiResult>>> {
+export function getOneMenuBtns(id: string): Promise<ResultData<Array<MenuApiResult>>> {
   return http.request<ResultData<Array<MenuApiResult>>>({
     url: `${config.api.baseUrl}/menu/one/${id}/btns`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }
 
-export function getOneMenuPerms (id: string): Promise<ResultData<Array<MenuPermApiResult>>> {
+export function getOneMenuPerms(id: string): Promise<ResultData<Array<MenuPermApiResult>>> {
   return http.request<ResultData<Array<MenuPermApiResult>>>({
     url: `${config.api.baseUrl}/menu/one/${id}/menu-perm`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }
 
-export function createMenu (data: ICreateOrUpdateMenu): Promise<ResultData<null>> {
+export function createMenu(data: ICreateOrUpdateMenu): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/menu`,
     method: ApiMethodContants.POST,
-    data
+    data,
   })
 }
 
-export function updateMenu (data: ICreateOrUpdateMenu): Promise<ResultData<null>> {
+export function updateMenu(data: ICreateOrUpdateMenu): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/menu`,
     method: ApiMethodContants.PUT,
-    data
+    data,
   })
 }
 
-export function delMenu (id: string): Promise<ResultData<null>> {
+export function delMenu(id: string): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/menu/${id}`,
-    method: ApiMethodContants.DELETE
+    method: ApiMethodContants.DELETE,
   })
 }

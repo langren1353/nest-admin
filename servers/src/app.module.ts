@@ -33,14 +33,17 @@ import { PostModule } from './system/post/post.module'
     ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => [{
-        rootPath: path.join(__dirname, '../../', 'upload'),
-        exclude: [`${config.get('app.prefix')}`],
-        serveRoot: config.get('app.file.serveRoot'),
-        serveStaticOptions: {
-          cacheControl: true
-        }
-      }] as ServeStaticModuleOptions[]
+      useFactory: (config: ConfigService) =>
+        [
+          {
+            rootPath: path.join(__dirname, '../../', 'upload'),
+            exclude: [`${config.get('app.prefix')}`],
+            serveRoot: config.get('app.file.serveRoot'),
+            serveStaticOptions: {
+              cacheControl: true,
+            },
+          },
+        ] as ServeStaticModuleOptions[],
     }),
     // 数据库
     TypeOrmModule.forRootAsync({
@@ -72,11 +75,11 @@ import { PostModule } from './system/post/post.module'
         useFactory: (config: ConfigService) => {
           return {
             closeClient: true,
-            config: config.get<RedisClientOptions>('redis')
+            config: config.get<RedisClientOptions>('redis'),
           }
-        }
+        },
       },
-      true
+      true,
     ),
     // 系统基础模块
     UserModule,
@@ -86,7 +89,7 @@ import { PostModule } from './system/post/post.module'
     PermModule,
     DeptModule,
     PostModule,
-    OssModule
+    OssModule,
     // 业务功能模块
   ],
   // app module 守卫，两个守卫分别依赖 UserService、PermService, 而 UserService、PermService 没有设置全局模块，
@@ -94,12 +97,12 @@ import { PostModule } from './system/post/post.module'
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard
+      useClass: JwtAuthGuard,
     },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-  ]
+  ],
 })
 export class AppModule {}

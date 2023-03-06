@@ -3,7 +3,9 @@
     <h3 class="roles__tip clearfix">
       <span>基础信息</span>
       <span class="fr role-edit-action">
-        <el-button type="primary" :disabled="!currRole.id" @click="() => showEditEvent()" v-perm="'perm_roles:edit'">编辑</el-button>
+        <el-button type="primary" :disabled="!currRole.id" @click="() => showEditEvent()" v-perm="'perm_roles:edit'"
+          >编辑</el-button
+        >
         <el-button type="danger" :disabled="!currRole.id" @click="delRoleFn" v-perm="'perm_roles:del'">删除</el-button>
       </span>
     </h3>
@@ -29,10 +31,10 @@
 import { defineComponent, provide, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { jsonTimeFormat } from '@/utils/index'
-import RoleEdit from './RoleEdit.vue'
 import { MenuApiResult } from '@/api/menu'
 import { getCurrUserMenuPerms } from '@/api/perm'
 import { ICreateOrUpdateRole, delRoleInfo } from '@/api/role'
+import RoleEdit from './RoleEdit.vue'
 
 export default defineComponent({
   components: { RoleEdit },
@@ -43,22 +45,22 @@ export default defineComponent({
         return {
           name: '',
           createDate: '',
-          remark: ''
+          remark: '',
         }
-      }
-    }
+      },
+    },
   },
   emits: ['change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const showEdit = ref<boolean>(false)
 
     const editRole = ref<ICreateOrUpdateRole>({
       name: '',
-      remark: ''
+      remark: '',
     })
 
     const showEditEvent = (newRole?: ICreateOrUpdateRole) => {
-      editRole.value = newRole || props.currRole as ICreateOrUpdateRole
+      editRole.value = newRole || (props.currRole as ICreateOrUpdateRole)
       showEdit.value = true
     }
 
@@ -73,7 +75,7 @@ export default defineComponent({
       await ElMessageBox.confirm(`是否确认删除【${props.currRole.name}】角色？`, '提示', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
       const res = await delRoleInfo(props.currRole.id)
       if (res?.code === 200) {
@@ -106,9 +108,9 @@ export default defineComponent({
       delRoleFn,
       showEditEvent,
       editChange,
-      editRole
+      editRole,
     }
-  }
+  },
 })
 </script>
 

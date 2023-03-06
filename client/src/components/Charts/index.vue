@@ -12,19 +12,19 @@ export default defineComponent({
   props: {
     width: {
       type: [Number, String],
-      default: '100%'
+      default: '100%',
     },
     height: {
       type: [Number, String],
-      default: '400px'
+      default: '400px',
     },
     options: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  setup (props) {
-    const id = 'echarts_' + +Date.now() + Math.floor(Math.random() * 10000)
+  setup(props) {
+    const id = `echarts_${+Date.now()}${Math.floor(Math.random() * 10000)}`
 
     const styles = computed<string>(() => {
       const width = typeof props.width === 'number' ? `${props.width}px` : props.width
@@ -46,9 +46,13 @@ export default defineComponent({
       chart.setOption(props.options)
     }
 
-    watch(() => props.options, () => {
-      initChart()
-    }, { deep: true })
+    watch(
+      () => props.options,
+      () => {
+        initChart()
+      },
+      { deep: true },
+    )
 
     // 响应式
     const resize = debounce(() => {
@@ -67,9 +71,9 @@ export default defineComponent({
 
     return {
       id,
-      styles
+      styles,
     }
-  }
+  },
 })
 </script>
 

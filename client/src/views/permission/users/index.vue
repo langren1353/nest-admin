@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="filter-container">
-     <div class="filter-item">
-        <el-select v-model="searchReq.status" clearable style="width: 100px;" placeholder="请选择">
+      <div class="filter-item">
+        <el-select v-model="searchReq.status" clearable style="width: 100px" placeholder="请选择">
           <el-option label="使用中" :value="1">
             <k-badge type="primary" content="使用中"></k-badge>
           </el-option>
@@ -10,16 +10,26 @@
             <k-badge type="danger" content="已禁用"></k-badge>
           </el-option>
         </el-select>
-     </div>
+      </div>
       <div class="filter-item">
-        <el-input v-model="searchReq.account" placeholder="用户帐号" style="width: 200px;margin-left: 10px;" clearable></el-input>
+        <el-input
+          v-model="searchReq.account"
+          placeholder="用户帐号"
+          style="width: 200px; margin-left: 10px"
+          clearable
+        ></el-input>
       </div>
 
       <div class="filter-action-wrapper filter-item">
         <el-button type="primary" @click="searchEvent">搜索</el-button>
-        <el-button type="text" @click="loadingMoreEvent" style="margin-left: 20px;" v-perm="'perm_users:createMultUser'">{{ loadingMore ? '收起' : '更多' }}</el-button>
+        <el-button
+          type="text"
+          @click="loadingMoreEvent"
+          style="margin-left: 20px"
+          v-perm="'perm_users:createMultUser'"
+          >{{ loadingMore ? '收起' : '更多' }}</el-button
+        >
       </div>
-
     </div>
     <div class="filter-container" v-show="loadingMore" v-perm="'perm_users:createMultUser'">
       <div class="filter-item">
@@ -29,17 +39,52 @@
         <el-button @click="downloadEvent">下载模板</el-button>
       </div>
     </div>
-    <k-table ref="userTableRef" v-bind="userData" :callback="getUserListFn" :loading="loading" border stripe current-row-key="id" style="width: 100%">
-      <template #avatar="{row}">
+    <k-table
+      ref="userTableRef"
+      v-bind="userData"
+      :callback="getUserListFn"
+      :loading="loading"
+      border
+      stripe
+      current-row-key="id"
+      style="width: 100%"
+    >
+      <template #avatar="{ row }">
         <el-avatar :src="row.avatar" shape="circle" :size="40"></el-avatar>
       </template>
-      <template #status="{row}">
-        <k-badge :type="row.status === 1 ? 'primary' : 'danger'" :content="row.status === 1 ? '使用中' : '已禁用'"></k-badge>
+      <template #status="{ row }">
+        <k-badge
+          :type="row.status === 1 ? 'primary' : 'danger'"
+          :content="row.status === 1 ? '使用中' : '已禁用'"
+        ></k-badge>
       </template>
-      <template  #actions="{ row }">
-        <el-button type="primary" plain size="small" @click="showUserEditEvent(row)" v-if="row.status === 1" v-perm="'perm_users:edit'">编辑</el-button>
-        <el-button :type="row.status ? 'danger' : 'success'" plain size="small" @click="forbiddenEvent(row)" v-perm="'perm_users:updateStatus'">{{ row.status ? '禁用' : '启用' }}</el-button>
-        <el-button type="warning" plain size="small" @click="resetPasswordEvent(row)" v-if="row.status === 1" v-perm="'perm_users:resetPw'">重置密码</el-button>
+      <template #actions="{ row }">
+        <el-button
+          type="primary"
+          plain
+          size="small"
+          @click="showUserEditEvent(row)"
+          v-if="row.status === 1"
+          v-perm="'perm_users:edit'"
+          >编辑</el-button
+        >
+        <el-button
+          :type="row.status ? 'danger' : 'success'"
+          plain
+          size="small"
+          @click="forbiddenEvent(row)"
+          v-perm="'perm_users:updateStatus'"
+          >{{ row.status ? '禁用' : '启用' }}</el-button
+        >
+        <el-button
+          type="warning"
+          plain
+          size="small"
+          @click="resetPasswordEvent(row)"
+          v-if="row.status === 1"
+          v-perm="'perm_users:resetPw'"
+          >重置密码</el-button
+        >
       </template>
     </k-table>
 
@@ -54,9 +99,6 @@
 import { defineComponent, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-import EditUser from './components/Edit.vue'
-import UploadErr from './components/UploadErr.vue'
-
 import appConfig from '@/config/index'
 import { getToken } from '@/utils/storage'
 import hasPerm from '@/utils/perm'
@@ -66,13 +108,24 @@ import { MyUploadFile } from '@/common/types/upload-file'
 import { ListResultData, Pagination } from '@/common/types/apiResult.type'
 import { IKTableProps } from '@/plugins/k-ui/packages/table/src/Table.type'
 
-import { getUserList, ICreateOrUpdateUser, QueryUserList, resetPassword, updateStatus, UserApiResult, dowmloadUserTemplate } from '@/api/user'
+import {
+  getUserList,
+  ICreateOrUpdateUser,
+  QueryUserList,
+  resetPassword,
+  updateStatus,
+  UserApiResult,
+  dowmloadUserTemplate,
+} from '@/api/user'
 import { getRoleList, RoleApiResult } from '@/api/role'
+import UploadErr from './components/UploadErr.vue'
+import EditUser from './components/Edit.vue'
 
 export default defineComponent({
   components: { EditUser, UploadErr },
-  setup () {
-    const hasActionPerm = hasPerm('perm_users:edit') || hasPerm('perm_users:updateStatus') || hasPerm('perm_users:resetPw')
+  setup() {
+    const hasActionPerm =
+      hasPerm('perm_users:edit') || hasPerm('perm_users:updateStatus') || hasPerm('perm_users:resetPw')
 
     const userData = ref<IKTableProps<UserApiResult>>({
       mode: 'config',
@@ -85,12 +138,18 @@ export default defineComponent({
         { label: '手机号', prop: 'phoneNum', default: '--' },
         { label: '邮箱', prop: 'email', default: '--' },
         { label: '状态', prop: 'status', slot: true, width: '90' },
-        { label: '注册时间', prop: 'createDate', width: '100', formatter: (row: UserApiResult) => jsonTimeFormat(row.createDate as string) }
+        {
+          label: '注册时间',
+          prop: 'createDate',
+          width: '100',
+          formatter: (row: UserApiResult) => jsonTimeFormat(row.createDate as string),
+        },
       ],
-      index: true
+      index: true,
     })
 
-    hasActionPerm && userData.value.columns.push({ label: '操作', prop: 'actions', slot: true, width: '250', fixed: 'right' })
+    hasActionPerm &&
+      userData.value.columns.push({ label: '操作', prop: 'actions', slot: true, width: '250', fixed: 'right' })
 
     const loading = ref<boolean>(false)
 
@@ -98,7 +157,7 @@ export default defineComponent({
       page: 1,
       size: 10,
       status: '',
-      account: ''
+      account: '',
     })
 
     // 查询表格事件
@@ -138,7 +197,7 @@ export default defineComponent({
     }
 
     const searchEvent = () => {
-      queryReq.value = Object.assign({}, searchReq.value)
+      queryReq.value = { ...searchReq.value }
       updateUserSuccess({ page: 1, size: 10 })
     }
 
@@ -147,7 +206,7 @@ export default defineComponent({
         await ElMessageBox.confirm(`是否确认重置用户【${row.account}】密码？`, '提示', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         })
         const res = await resetPassword(row.id as string)
         if (res?.code === 200) {
@@ -160,11 +219,15 @@ export default defineComponent({
 
     const forbiddenEvent = async (row: UserApiResult) => {
       try {
-        await ElMessageBox.confirm(`是否确认将用户【${row.account}】${row.status === 1 ? '禁用' : '恢复正常使用'}吗？`, '提示', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
+        await ElMessageBox.confirm(
+          `是否确认将用户【${row.account}】${row.status === 1 ? '禁用' : '恢复正常使用'}吗？`,
+          '提示',
+          {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+          },
+        )
         loading.value = true
         const res = await updateStatus({ id: row.id, status: row.status === 1 ? 0 : 1 })
         loading.value = false
@@ -196,7 +259,7 @@ export default defineComponent({
     const uploadConfig = {
       action: `${appConfig.api.baseUrl}/user/import`,
       headers: {
-        Authorization: getToken()
+        Authorization: getToken(),
       },
       style: 'display: inline-block;margin-right: 20px;',
       accept: acceptFileType,
@@ -214,15 +277,13 @@ export default defineComponent({
       onSuccess: (res: any) => {
         if (res?.code === 200) {
           ElMessage({ type: 'success', message: '导入成功' })
+        } else if (res?.data) {
+          uploadErrData.value = { errMsg: res.msg, errData: res.data }
+          showUploadErr.value = true
         } else {
-          if (res?.data) {
-            uploadErrData.value = { errMsg: res.msg, errData: res.data }
-            showUploadErr.value = true
-          } else {
-            ElMessage({ type: 'error', message: res.msg || '网络异常，请稍后重试' })
-          }
+          ElMessage({ type: 'error', message: res.msg || '网络异常，请稍后重试' })
         }
-      }
+      },
     }
 
     return {
@@ -245,8 +306,8 @@ export default defineComponent({
       downloadEvent,
       uploadConfig,
       showUploadErr,
-      uploadErrData
+      uploadErrData,
     }
-  }
+  },
 })
 </script>

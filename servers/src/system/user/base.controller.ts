@@ -35,10 +35,10 @@ export class BaseController {
   }
 
   @Post('/update/token')
-  @ApiOperation({ summary: '刷新token'})
+  @ApiOperation({ summary: '刷新token' })
   @ApiResult(CreateTokenDto)
   @ApiBearerAuth()
-  async updateToken (@Req() req): Promise<ResultData> {
+  async updateToken(@Req() req): Promise<ResultData> {
     return await this.userService.updateToken(req.user.id)
   }
 }

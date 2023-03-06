@@ -16,7 +16,7 @@ export interface DeptApiResult extends BaseResult {
   /** 部门负责人 */
   leader: string
   /** 备注 */
-  remark: string,
+  remark: string
   children?: DeptApiResult[]
 }
 
@@ -33,35 +33,35 @@ export interface ICreateOrUpdateDept {
 }
 
 /** 查询所有部门集合 */
-export function getDeptList (): Promise<ResultData<DeptApiResult[]>> {
+export function getDeptList(): Promise<ResultData<DeptApiResult[]>> {
   return http.request<ResultData<DeptApiResult[]>>({
     url: `${config.api.baseUrl}/dept/list`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }
 
 /** 更新部门 */
-export function updateDept (data: ICreateOrUpdateDept): Promise<ResultData<null>> {
+export function updateDept(data: ICreateOrUpdateDept): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/dept`,
     method: ApiMethodContants.PUT,
-    data
+    data,
   })
 }
 
 /** 创建部门 */
-export function createDept (data: ICreateOrUpdateDept): Promise<ResultData<DeptApiResult>> {
+export function createDept(data: ICreateOrUpdateDept): Promise<ResultData<DeptApiResult>> {
   return http.request<ResultData<DeptApiResult>>({
     url: `${config.api.baseUrl}/dept`,
     method: ApiMethodContants.POST,
-    data
+    data,
   })
 }
 
 /** 删除部门 */
-export function deleteDept (id: string): Promise<ResultData<null>> {
+export function deleteDept(id: string): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/dept/${id}`,
-    method: ApiMethodContants.DELETE
+    method: ApiMethodContants.DELETE,
   })
 }

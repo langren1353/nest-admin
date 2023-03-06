@@ -7,7 +7,7 @@
         default-expand-all
         node-key="id"
         :data="deptTree"
-        :props="{ label: 'name', children: 'children', disabled: 'disabled'}"
+        :props="{ label: 'name', children: 'children', disabled: 'disabled' }"
         @node-click="nodeClickEvent"
       ></el-tree>
       <el-empty v-else description="暂无数据"></el-empty>
@@ -21,7 +21,7 @@ import { DeptApiResult, DeptTreeName } from '@/api/dept'
 
 export default defineComponent({
   emits: ['node-click'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const deptTree = inject<Ref<DeptApiResult[]>>(DeptTreeName)
 
     const nodeClickEvent = (data: DeptApiResult) => {
@@ -29,9 +29,9 @@ export default defineComponent({
     }
     return {
       deptTree,
-      nodeClickEvent
+      nodeClickEvent,
     }
-  }
+  },
 })
 </script>
 

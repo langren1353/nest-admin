@@ -1,4 +1,4 @@
-<template >
+<template>
   <div class="dashboard-container">
     <div class="grow-card-wrapper">
       <el-row :gutter="12">
@@ -9,7 +9,13 @@
           <grow-card title="总产品数" icon="product" :count="2000" :increase="3" comparison-type="同比"></grow-card>
         </el-col>
         <el-col :span="6" :sm="12" :xs="24" :lg="6">
-          <grow-card title="总营收额" icon="chart-line" :count="3200000" :increase="-2" comparison-type="环比"></grow-card>
+          <grow-card
+            title="总营收额"
+            icon="chart-line"
+            :count="3200000"
+            :increase="-2"
+            comparison-type="环比"
+          ></grow-card>
         </el-col>
         <el-col :span="6" :sm="12" :xs="24" :lg="6">
           <grow-card title="总任务数" icon="time" :count="10000" :increase="-1" comparison-type="同比"></grow-card>
@@ -17,17 +23,17 @@
       </el-row>
     </div>
 
-     <div>
+    <div>
       <el-row :gutter="12">
         <el-col :span="16" :xs="24" :sm="24" :lg="16">
           <Charts :options="lineChartOptions" height="400px"></Charts>
-          <div style="margin-top: 12px;">
+          <div style="margin-top: 12px">
             <el-row :gutter="12">
               <el-col :span="12">
                 <Charts :options="pieOptions" height="280px"></Charts>
                 <!-- <chart-pie v-bind="pieDemoData" height="280px"></chart-pie> -->
               </el-col>
-              <el-col :span="12" >
+              <el-col :span="12">
                 <Charts :options="barOptions" height="280px"></Charts>
               </el-col>
             </el-row>
@@ -41,21 +47,19 @@
         </el-col>
       </el-row>
     </div>
-
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+import Charts from '_c/Charts/index.vue'
 import GrowCard from './components/GrowCard.vue'
 import ProductCard from './components/ProductCard.vue'
 
-import Charts from '_c/Charts/index.vue'
-
 export default defineComponent({
   components: { GrowCard, ProductCard, Charts },
-  setup () {
+  setup() {
     const productionDemoData = [
       {
         guid: 1,
@@ -65,8 +69,8 @@ export default defineComponent({
         updateDate: '2020.06.12',
         userAvatar: [
           'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-        ]
+          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+        ],
       },
       {
         guid: 2,
@@ -80,8 +84,8 @@ export default defineComponent({
           'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
           'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
           'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-        ]
+          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+        ],
       },
       {
         guid: 3,
@@ -92,30 +96,30 @@ export default defineComponent({
         userAvatar: [
           'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
           'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-        ]
-      }
+          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+        ],
+      },
     ]
 
     const lineChartOptions = {
       xAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
       series: [
         {
           data: [150, 230, 224, 218, 135, 147, 260],
-          type: 'line'
-        }
-      ]
+          type: 'line',
+        },
+      ],
     }
 
     const pieOptions = {
       tooltip: {
-        trigger: 'item'
+        trigger: 'item',
       },
       series: [
         {
@@ -127,63 +131,63 @@ export default defineComponent({
             { value: 735, name: 'Direct' },
             { value: 580, name: 'Email' },
             { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
+            { value: 300, name: 'Video Ads' },
           ],
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
               shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ]
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
+            },
+          },
+        },
+      ],
     }
 
     const barOptions = {
       tooltip: {
         trigger: 'axis',
         axisPointer: {
-          type: 'shadow'
-        }
+          type: 'shadow',
+        },
       },
       grid: {
         left: '3%',
         right: '4%',
         bottom: '3%',
-        containLabel: true
+        containLabel: true,
       },
       xAxis: [
         {
           type: 'category',
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           axisTick: {
-            alignWithLabel: true
-          }
-        }
+            alignWithLabel: true,
+          },
+        },
       ],
       yAxis: [
         {
-          type: 'value'
-        }
+          type: 'value',
+        },
       ],
       series: [
         {
           name: 'Direct',
           type: 'bar',
           barWidth: '60%',
-          data: [10, 52, 200, 334, 390, 330, 220]
-        }
-      ]
+          data: [10, 52, 200, 334, 390, 330, 220],
+        },
+      ],
     }
 
     return {
       productionDemoData,
       lineChartOptions,
       pieOptions,
-      barOptions
+      barOptions,
     }
-  }
+  },
 })
 </script>
 
@@ -199,7 +203,7 @@ export default defineComponent({
 
   :deep(.echart-container) {
     border-radius: 4px;
-    box-shadow: 6px 6px 54px 0 rgba(0,0,0,.05);
+    box-shadow: 6px 6px 54px 0 rgba(0, 0, 0, 0.05);
   }
 
   .product-demo {
@@ -207,7 +211,7 @@ export default defineComponent({
     width: 100%;
     height: 100%;
     border-radius: 4px;
-    box-shadow: 6px 6px 54px 0 rgba(0,0,0,.05);
+    box-shadow: 6px 6px 54px 0 rgba(0, 0, 0, 0.05);
     padding: 5px;
 
     .product_tip {

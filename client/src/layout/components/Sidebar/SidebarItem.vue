@@ -1,7 +1,15 @@
 <template>
-  <template v-if="!item.hidden && hasOneShowingChild(item.children,item) && ( onlyOneChild && (!onlyOneChild.children || onlyOneChild.noShowingChildren)) && !item.alwaysShow">
+  <template
+    v-if="
+      !item.hidden &&
+      hasOneShowingChild(item.children, item) &&
+      onlyOneChild &&
+      (!onlyOneChild.children || onlyOneChild.noShowingChildren) &&
+      !item.alwaysShow
+    "
+  >
     <app-link v-if="onlyOneChild && onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-      <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+      <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
         <MenuItemIcon :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"></MenuItemIcon>
         <template #title>
           <span>{{ onlyOneChild.meta.title }}</span>
@@ -10,7 +18,7 @@
     </app-link>
   </template>
 
-  <el-sub-menu v-else-if="!item.hidden" :index="resolvePath(item.path)" >
+  <el-sub-menu v-else-if="!item.hidden" :index="resolvePath(item.path)">
     <template #title>
       <MenuItemIcon :icon="item.meta && item.meta.icon"></MenuItemIcon>
       <span>{{ item.meta && item.meta.title }}</span>
@@ -29,10 +37,10 @@
 <script lang="ts">
 import path from 'path'
 import { defineComponent, PropType, ref, toRefs } from 'vue'
-import MenuItemIcon from './menuItemIcon'
-import AppLink from './Link.vue'
 import { isExternal } from '@/utils/validate'
 import { AppRouteRecordRaw } from '@/common/types/appRoute.type'
+import MenuItemIcon from './menuItemIcon'
+import AppLink from './Link.vue'
 
 interface ISidebarItemProps {
   item: AppRouteRecordRaw[] | Record<string, any>
@@ -46,25 +54,25 @@ export default defineComponent({
   props: {
     item: {
       type: Object as PropType<AppRouteRecordRaw>,
-      required: true
+      required: true,
     },
     isNest: {
       type: Boolean,
-      default: false
+      default: false,
     },
     basePath: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
-  setup (props) {
+  setup(props) {
     // const data = reactive({
     //   onlyOneChild: null
     // })
     const { basePath } = toRefs<ISidebarItemProps>(props)
     const onlyOneChild = ref<AppRouteRecordRaw>()
     const hasOneShowingChild = (children: Array<AppRouteRecordRaw> = [], parent: AppRouteRecordRaw): boolean => {
-      const showingChildren = children.filter(route => {
+      const showingChildren = children.filter((route) => {
         if (route.hidden) return false
         onlyOneChild.value = route
         return true
@@ -85,8 +93,8 @@ export default defineComponent({
     return {
       onlyOneChild,
       hasOneShowingChild,
-      resolvePath
+      resolvePath,
     }
-  }
+  },
 })
 </script>

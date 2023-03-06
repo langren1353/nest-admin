@@ -3,7 +3,13 @@
     <div class="grow-card__header">
       <div class="grow-card__info">
         <p class="grow-card__title">{{ title }}</p>
-        <k-count-to :end="count" :simplify="String(count).length > 6" usegroup :delay="4" countClass="grow-card__conuntto"></k-count-to>
+        <k-count-to
+          :end="count"
+          :simplify="String(count).length > 6"
+          usegroup
+          :delay="4"
+          countClass="grow-card__conuntto"
+        ></k-count-to>
       </div>
       <div class="grow-card__icon">
         <svg-icon :icon-class="icon"></svg-icon>
@@ -12,8 +18,8 @@
     <div class="grow-card__footer">
       <svg-icon :icon-class="increaseIcon"></svg-icon>
       <span class="grow-card__increasetext" :class="increase > 0 ? 'ascent-color' : 'decline-color'">
-        <span>{{increaseText.intNum}}</span>
-        <span v-if="increaseText.decimalNum" style="font-size: 16px;">{{ `.${increaseText.decimalNum}` }}</span>
+        <span>{{ increaseText.intNum }}</span>
+        <span v-if="increaseText.decimalNum" style="font-size: 16px">{{ `.${increaseText.decimalNum}` }}</span>
       </span>
       <span class="grow-card__increasetip">{{ `${comparisonType}${increase > 0 ? '上升' : '下降'}` }}</span>
     </div>
@@ -27,35 +33,35 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     count: {
       type: Number,
-      default: 0
+      default: 0,
     },
     icon: String,
     increase: {
       type: Number,
-      default: 0
+      default: 0,
     },
     comparisonType: {
       type: String,
       validator: (val) => {
         return ['环比', '同比'].includes(val)
-      }
+      },
     },
-    countToOptions: Object
+    countToOptions: Object,
   },
   computed: {
-    increaseIcon () {
+    increaseIcon() {
       return this.increase > 0 ? 'ascent' : 'decline'
     },
-    increaseText () {
+    increaseText() {
       const numText = String(Math.abs(this.increase))
       const index = numText.indexOf('.')
       const res = {
         decimalNum: '',
-        intNum: ''
+        intNum: '',
       }
       if (index > -1) {
         res.intNum = numText.substring(0, index)
@@ -64,8 +70,8 @@ export default defineComponent({
       }
       res.intNum = numText
       return res
-    }
-  }
+    },
+  },
 })
 </script>
 
@@ -76,7 +82,7 @@ export default defineComponent({
   background-color: #fff;
   height: 158px;
   border-radius: 4px;
-  box-shadow: 6px 6px 54px 0 rgba(0,0,0,.05);
+  box-shadow: 6px 6px 54px 0 rgba(0, 0, 0, 0.05);
   flex-direction: column;
 }
 .grow-card__header {
@@ -90,7 +96,7 @@ export default defineComponent({
   flex-wrap: wrap;
 
   .count-to {
-    width: 100%
+    width: 100%;
   }
 }
 .grow-card__title {

@@ -1,6 +1,6 @@
 <template>
   <el-select ref="selectRef" v-model="componentLabel" clearable @clear="handleClear">
-    <el-option :value="componentValue" style="height: auto;padding: 0;">
+    <el-option :value="componentValue" style="height: auto; padding: 0">
       <el-tree
         ref="selectTreeRef"
         highlight-current
@@ -20,23 +20,23 @@ export default defineComponent({
   props: {
     modelValue: {
       type: [Number, String],
-      required: true
+      required: true,
     },
     treeData: {
       type: Array,
       default: () => [],
-      required: true
+      required: true,
     },
     treeOptions: {
       type: Object,
       default: () => ({ nodeKey: 'id', defaultExpandAll: true }),
       validate: (val: any) => {
         return !!val.nodeKey
-      }
-    }
+      },
+    },
   },
   emits: ['update:modelValue'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     // 下拉框绑定值（选中值的名字）
     const componentLabel = ref<any>('')
     // 实际选中的值
@@ -62,18 +62,22 @@ export default defineComponent({
       selectRef.value.blur()
     }
     // 设定初始值，如果存在
-    watch(() => props.modelValue, (val: number | string) => {
-      if (val !== componentValue.value) {
-        nextTick(() => {
-          const currNode = selectTreeRef.value.getNode(val)
-          if (currNode) {
-            componentValue.value = val
-            selectTreeRef.value.setCurrentKey(val)
-            componentLabel.value = currNode.label
-          }
-        })
-      }
-    }, { immediate: true })
+    watch(
+      () => props.modelValue,
+      (val: number | string) => {
+        if (val !== componentValue.value) {
+          nextTick(() => {
+            const currNode = selectTreeRef.value.getNode(val)
+            if (currNode) {
+              componentValue.value = val
+              selectTreeRef.value.setCurrentKey(val)
+              componentLabel.value = currNode.label
+            }
+          })
+        }
+      },
+      { immediate: true },
+    )
 
     return {
       componentValue,
@@ -81,8 +85,8 @@ export default defineComponent({
       selectTreeRef,
       selectRef,
       handleClear,
-      handleCheckChange
+      handleCheckChange,
     }
-  }
+  },
 })
 </script>

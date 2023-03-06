@@ -1,5 +1,5 @@
 declare module '*.scss' {
-  const content: { readonly [key:string]: string }
+  const content: { readonly [key: string]: string }
   export default content
 }
 

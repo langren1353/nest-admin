@@ -10,7 +10,7 @@
         <k-select-tree
           v-model="deptForm.parentId"
           :tree-data="deptTree"
-          :tree-options="{ nodeKey: 'id', defaultExpandAll: true, props: { label: 'name' }  }"
+          :tree-options="{ nodeKey: 'id', defaultExpandAll: true, props: { label: 'name' } }"
         ></k-select-tree>
       </template>
       <template #footer v-if="isEdit">
@@ -33,27 +33,30 @@ export default defineComponent({
   props: {
     curr: {
       type: Object as PropType<ICreateOrUpdateDept>,
-      required: true
-    }
+      required: true,
+    },
   },
   emits: ['change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const deptFormDefault = {
       name: '',
       parentId: '0',
       status: 1,
       orderNum: 0,
       leader: '',
-      remark: ''
+      remark: '',
     }
     const deptForm = ref<ICreateOrUpdateDept>({ ...deptFormDefault })
 
     // 缓存
     const deptFormTmp = ref<ICreateOrUpdateDept>({ ...deptFormDefault })
-    watch(() => props.curr, (val: ICreateOrUpdateDept) => {
-      deptForm.value = val
-      deptFormTmp.value = { ...val }
-    })
+    watch(
+      () => props.curr,
+      (val: ICreateOrUpdateDept) => {
+        deptForm.value = val
+        deptFormTmp.value = { ...val }
+      },
+    )
 
     // 编辑
     const isEdit = ref<boolean>(false)
@@ -81,48 +84,53 @@ export default defineComponent({
           component: 'radio',
           options: [
             { label: 1, content: '正常' },
-            { label: 0, content: '停用' }
-          ]
+            { label: 0, content: '停用' },
+          ],
         },
-        { label: '备注：', prop: 'remark', component: 'input', type: 'textarea', rows: 2, placeholder: '请输入部门备注' }
+        {
+          label: '备注：',
+          prop: 'remark',
+          component: 'input',
+          type: 'textarea',
+          rows: 2,
+          placeholder: '请输入部门备注',
+        },
       ],
       rules: {
         name: [
           { required: true, message: '请输入部门名称', trigger: 'blur' },
-          { type: 'string', min: 2, max: 20, message: '部门名称仅支持2~20个字符', trigger: 'blur' }
+          { type: 'string', min: 2, max: 20, message: '部门名称仅支持2~20个字符', trigger: 'blur' },
         ],
-        parentId: [
-          { required: true, message: '请选择上级部门', trigger: 'blur' }
-        ],
+        parentId: [{ required: true, message: '请选择上级部门', trigger: 'blur' }],
         leader: [
           { required: true, message: '请输入部门负责人', trigger: 'blur' },
-          { type: 'string', min: 2, max: 10, message: '部门负责人仅支持2~10个字符', trigger: 'blur' }
+          { type: 'string', min: 2, max: 10, message: '部门负责人仅支持2~10个字符', trigger: 'blur' },
         ],
-        status: [
-          { required: true, message: '请选择部门状态', trigger: 'blur' }
-        ],
-        orderNum: [
-          { required: true, message: '请输入排序', trigger: 'blur' }
-        ]
-      }
+        status: [{ required: true, message: '请选择部门状态', trigger: 'blur' }],
+        orderNum: [{ required: true, message: '请输入排序', trigger: 'blur' }],
+      },
     })
 
     const deptTree = ref<DeptApiResult[]>([])
     const deptTreeInject = inject<Ref<DeptApiResult[]>>(DeptTreeName, deptTree)
-    watch(() => deptTreeInject.value, (val: DeptApiResult[]) => {
-      deptTree.value = [
-        {
-          name: '无上级部门',
-          id: '0',
-          parentId: '-1',
-          orderNum: 0,
-          status: 1,
-          remark: '',
-          leader: '',
-          children: val
-        }
-      ]
-    }, { deep: true, immediate: true })
+    watch(
+      () => deptTreeInject.value,
+      (val: DeptApiResult[]) => {
+        deptTree.value = [
+          {
+            name: '无上级部门',
+            id: '0',
+            parentId: '-1',
+            orderNum: 0,
+            status: 1,
+            remark: '',
+            leader: '',
+            children: val,
+          },
+        ]
+      },
+      { deep: true, immediate: true },
+    )
 
     const loading = ref<boolean>(false)
     const createOrUpdateEvent = async () => {
@@ -148,7 +156,7 @@ export default defineComponent({
       await ElMessageBox.confirm(`是否确认删除【${deptForm.value.name}】部门？`, '提示', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
       loading.value = true
       const res = await deleteDept(deptForm.value.id as string)
@@ -179,9 +187,9 @@ export default defineComponent({
       addEvent,
       cancelEidt,
       delDept,
-      confirmEvent
+      confirmEvent,
     }
-  }
+  },
 })
 </script>
 

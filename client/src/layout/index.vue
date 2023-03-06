@@ -12,38 +12,38 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
+import { useStore } from '@/store'
 import Navbar from './components/Navbar/index.vue'
 import Sidebar from './components/Sidebar/index.vue'
 import AppMain from './components/AppMain.vue'
-import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Layout',
   components: {
     Navbar,
     Sidebar,
-    AppMain
+    AppMain,
   },
-  setup () {
+  setup() {
     const store = useStore()
     const classObj = computed(() => {
       return {
         hideSidebar: !store.state.app.sidebar.opened,
         openSidebar: store.state.app.sidebar.opened,
         withoutAnimation: store.state.app.sidebar.withoutAnimation,
-        mobile: store.state.app.device === 'mobile'
+        mobile: store.state.app.device === 'mobile',
       }
     })
     return {
-      classObj
+      classObj,
     }
-  }
+  },
 })
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-@import "~@/styles/variables.scss";
+@import '~@/styles/mixin.scss';
+@import '~@/styles/variables.scss';
 
 .app-wrappers {
   @include clearfix;
@@ -77,7 +77,7 @@ export default defineComponent({
 }
 
 .hideSidebar .fixed-header {
-  width: calc(100% - 54px)
+  width: calc(100% - 54px);
 }
 
 .mobile .fixed-header {

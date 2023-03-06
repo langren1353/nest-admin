@@ -14,32 +14,32 @@ export default defineComponent({
   props: {
     iconClass: {
       type: String,
-      required: true
+      required: true,
     },
     className: {
       type: String,
       default: '',
-      required: false
-    }
+      required: false,
+    },
   },
-  setup (props) {
+  setup(props) {
     const { iconClass, className } = toRefs(props)
     const isExternalFlag = computed(() => isExternal(iconClass.value))
     const iconName = computed(() => `#icon-${iconClass.value}`)
-    const svgClass = computed(() => className.value ? `svg-icon ${className.value}` : 'svg-icon')
+    const svgClass = computed(() => (className.value ? `svg-icon ${className.value}` : 'svg-icon'))
     const styleExternalIcon = computed(() => {
       return {
         mask: `url(${iconClass.value}) no-repeat 50% 50%`,
-        '-webkit-mask': `url(${iconClass.value}) no-repeat 50% 50%`
+        '-webkit-mask': `url(${iconClass.value}) no-repeat 50% 50%`,
       }
     })
     return {
       isExternalFlag,
       iconName,
       svgClass,
-      styleExternalIcon
+      styleExternalIcon,
     }
-  }
+  },
 })
 </script>
 

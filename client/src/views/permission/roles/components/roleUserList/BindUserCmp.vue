@@ -1,8 +1,21 @@
 <template>
-  <el-dialog title="选择用户" v-model="visible" top="10vh" width="400px" :before-close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog
+    title="选择用户"
+    v-model="visible"
+    top="10vh"
+    width="400px"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
     <el-empty description="暂无数据" v-if="!loading && userList.length === 0"></el-empty>
-    <ul v-infinite-scroll="loadEvent" :infinite-scroll-disabled="loading"  class="bind-role-user-liet" v-else>
-      <li v-for="user in userList" :key="user.id" :class="`role-user-item clearfix ${checked.includes(user.id) ? 'checked-user' : ''}`" @click="clickEvent(user.id)">
+    <ul v-infinite-scroll="loadEvent" :infinite-scroll-disabled="loading" class="bind-role-user-liet" v-else>
+      <li
+        v-for="user in userList"
+        :key="user.id"
+        :class="`role-user-item clearfix ${checked.includes(user.id) ? 'checked-user' : ''}`"
+        @click="clickEvent(user.id)"
+      >
         <span class="bind-role-user-account">{{ user.account }}</span>
         <span>（{{ user.phoneNum }}）</span>
         <span class="fr" v-if="checked.includes(user.id)">
@@ -30,25 +43,30 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     currId: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
   emits: [UPDATE_MODEL_EVENT, 'success'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const userList = ref<UserApiResult[]>([])
     const total = ref<number>(0)
     const loading = ref<boolean>(false)
     const searchReq = ref<QueryUserList>({ page: 1, size: 10 })
     const getNotCurrRoleUserList = async () => {
       loading.value = true
-      const res: ResultData<ListResultData<UserApiResult>> = await getUserList({ ...searchReq.value, status: 1, roleId: props.currId, hasCurrRole: 0 } as QueryUserList)
+      const res: ResultData<ListResultData<UserApiResult>> = await getUserList({
+        ...searchReq.value,
+        status: 1,
+        roleId: props.currId,
+        hasCurrRole: 0,
+      } as QueryUserList)
       loading.value = false
       if (res?.code === 200) {
-        userList.value.push(...res.data.list as UserApiResult[])
+        userList.value.push(...(res.data.list as UserApiResult[]))
         total.value = res.data.total
       }
     }
@@ -62,23 +80,26 @@ export default defineComponent({
 
     const checked = ref<string[]>([])
     const clickEvent = (userId: string) => {
-      const i = checked.value.findIndex(id => id === userId)
+      const i = checked.value.findIndex((id) => id === userId)
       if (i > -1) checked.value.splice(i, 1)
       else checked.value.push(userId)
     }
 
     // dialog
     const visible = ref<boolean>(false)
-    watch(() => props.modelValue, (val) => {
-      visible.value = val
-      if (val) {
-        searchReq.value.page = 1
-        getNotCurrRoleUserList()
-      } else {
-        checked.value = []
-        userList.value = []
-      }
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        visible.value = val
+        if (val) {
+          searchReq.value.page = 1
+          getNotCurrRoleUserList()
+        } else {
+          checked.value = []
+          userList.value = []
+        }
+      },
+    )
 
     const handleClose = () => {
       emit(UPDATE_MODEL_EVENT, false)
@@ -108,9 +129,9 @@ export default defineComponent({
       clickEvent,
       loading,
       loadEvent,
-      comfirmBindUser
+      comfirmBindUser,
     }
-  }
+  },
 })
 </script>
 
@@ -121,11 +142,11 @@ export default defineComponent({
     width: 360px;
     line-height: 36px;
     font-size: 16px;
-    color: rgba(0, 0,0, .65);
+    color: rgba(0, 0, 0, 0.65);
     cursor: pointer;
 
     &.checked-user {
-      color: #409EFF;
+      color: #409eff;
     }
 
     .bind-role-user-account {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsIn, IsNumber, IsString, Min, IsNotEmpty, Length, IsNumberString } from 'class-validator';
+import { IsArray, IsIn, IsNumber, IsString, Min, IsNotEmpty, Length, IsNumberString } from 'class-validator'
 import { $enum } from 'ts-enum-util'
 
 import { MenuType } from '../../../common/enums/common.enum'
@@ -20,7 +20,6 @@ export class CreateMenuDto {
   @ApiProperty({ description: '菜单唯一标识，前端控制页面显隐' })
   @IsString({ message: 'code 类型错误，正确类型 string' })
   readonly code: string
-
 
   @ApiProperty({ description: '菜单类型 1-菜单/目录 2-tabs 3-按钮', enum: $enum(MenuType).getValues(), required: false })
   @IsNumber({}, { message: 'type 类型错误' })

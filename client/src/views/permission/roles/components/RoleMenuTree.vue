@@ -1,5 +1,13 @@
 <template>
-  <el-tree ref="roleMenuTreeRef" :data="menuTree" node-key="id" :props="{ label: 'name' }" @check-change="hanldCheckChange" show-checkbox check-strictly>
+  <el-tree
+    ref="roleMenuTreeRef"
+    :data="menuTree"
+    node-key="id"
+    :props="{ label: 'name' }"
+    @check-change="hanldCheckChange"
+    show-checkbox
+    check-strictly
+  >
     <template #default="{ node, data }">
       <span>
         <svg-icon :icon-class="data.type === 3 ? 'button' : 'menufold'" class="role-menu-tree__icon"></svg-icon>
@@ -23,23 +31,30 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   emits: [UPDATE_MODEL_EVENT],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const menuTree = ref<Array<MenuApiResult>>([])
     // 从页面组件中拿取所拥有的菜单
     const menuList = inject<Ref<Array<MenuApiResult>>>('menus', ref([]))
     console.log(menuList.value, 345)
-    watch(() => menuList.value, (val) => {
-      menuTree.value = arrToTree(val, { root: '0', pidKey: 'parentId' }) as MenuApiResult[]
-    }, { immediate: true })
+    watch(
+      () => menuList.value,
+      (val) => {
+        menuTree.value = arrToTree(val, { root: '0', pidKey: 'parentId' }) as MenuApiResult[]
+      },
+      { immediate: true },
+    )
 
     const roleMenuTreeRef = ref()
-    watch(() => props.modelValue as number[], (val: number[]) => {
-      roleMenuTreeRef.value && roleMenuTreeRef.value.setCheckedKeys(val, true)
-    })
+    watch(
+      () => props.modelValue as number[],
+      (val: number[]) => {
+        roleMenuTreeRef.value && roleMenuTreeRef.value.setCheckedKeys(val, true)
+      },
+    )
 
     const hanldCheckChange = () => {
       emit(UPDATE_MODEL_EVENT, roleMenuTreeRef.value.getCheckedKeys())
@@ -48,9 +63,9 @@ export default defineComponent({
     return {
       menuTree,
       roleMenuTreeRef,
-      hanldCheckChange
+      hanldCheckChange,
     }
-  }
+  },
 })
 </script>
 

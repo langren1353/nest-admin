@@ -1,17 +1,22 @@
 <template>
   <div class="login-container">
     <div class="login-wrapper">
-      <div class="form-wrapper" >
+      <div class="form-wrapper">
         <h3 class="form-title">
           <span class="nest-logo"></span>
           <span>登 录</span>
         </h3>
-        <el-form ref="loginFormRef" :disabled="loading" style="width: 100%;" :model="formData" :rules="loginFormRules" >
+        <el-form ref="loginFormRef" :disabled="loading" style="width: 100%" :model="formData" :rules="loginFormRules">
           <el-form-item prop="account">
             <el-input v-model.trim="formData.account" placeholder="帐号/邮箱/手机号"></el-input>
           </el-form-item>
-          <el-form-item  prop="password">
-            <el-input type="password" v-model="formData.password" placeholder="密码"  @keyup.enter="loginEvent"></el-input>
+          <el-form-item prop="password">
+            <el-input
+              type="password"
+              v-model="formData.password"
+              placeholder="密码"
+              @keyup.enter="loginEvent"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <div class="action-wrapper">
@@ -20,7 +25,9 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" style="width: 100%;" @click="loginEvent" :loading="loading">登&nbsp;&nbsp;&nbsp;录</el-button>
+            <el-button type="primary" style="width: 100%" @click="loginEvent" :loading="loading"
+              >登&nbsp;&nbsp;&nbsp;录</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
@@ -38,17 +45,13 @@ import { UserLogin, login as loginApi, LoginResult } from '@/api/user'
 import { setToken } from '@/utils/storage'
 
 export default defineComponent({
-  setup () {
+  setup() {
     const formData = ref<UserLogin>({ account: '', password: '' })
     const autoLogin = ref<boolean>(false)
 
     const loginFormRules = ref({
-      account: [
-        { required: true, message: '请输入帐号/邮箱/手机号', trigger: 'blur' }
-      ],
-      password: [
-        { required: true, message: '请输入密码', trigger: 'blur' }
-      ]
+      account: [{ required: true, message: '请输入帐号/邮箱/手机号', trigger: 'blur' }],
+      password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
     })
 
     const router = useRouter()
@@ -82,9 +85,9 @@ export default defineComponent({
       loginFormRef,
       loginFormRules,
       loginEvent,
-      loading
+      loading,
     }
-  }
+  },
 })
 </script>
 
@@ -120,7 +123,7 @@ export default defineComponent({
         width: 40px;
         height: 40px;
         margin-right: 10px;
-        background: url(~@/assets/imgs/nest-logo.svg) no-repeat center / 100% 100% ;
+        background: url(~@/assets/imgs/nest-logo.svg) no-repeat center / 100% 100%;
       }
     }
     .action-wrapper {

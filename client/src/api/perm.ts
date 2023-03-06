@@ -12,16 +12,16 @@ export interface PermApiResult {
   desc: string
 }
 
-export function getAllApiPerms (): Promise<ResultData<Array<PermApiResult>>> {
+export function getAllApiPerms(): Promise<ResultData<Array<PermApiResult>>> {
   return http.request<ResultData<Array<PermApiResult>>>({
     url: `${config.api.baseUrl}/perm/all`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }
 
-export function getCurrUserMenuPerms (): Promise<ResultData<MenuApiResult[]>> {
+export function getCurrUserMenuPerms(): Promise<ResultData<MenuApiResult[]>> {
   return http.request<ResultData<MenuApiResult[]>>({
     url: `${config.api.baseUrl}/perm/menu`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }

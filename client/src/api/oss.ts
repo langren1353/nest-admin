@@ -25,26 +25,26 @@ export interface findOssList extends Pagination {
   endDay?: string
 }
 
-export function getFileList (params: findOssList): Promise<ResultData<OssApiResult>> {
+export function getFileList(params: findOssList): Promise<ResultData<OssApiResult>> {
   return http.request<ResultData<OssApiResult>>({
     url: `${config.api.baseUrl}/oss/list`,
     method: ApiMethodContants.GET,
-    params
+    params,
   })
 }
 
-export function fileUpload (data: FormData): Promise<ResultData<OssApiResult[]>> {
+export function fileUpload(data: FormData): Promise<ResultData<OssApiResult[]>> {
   return http.request<ResultData<OssApiResult[]>>({
     url: `${config.api.baseUrl}/oss/upload`,
     method: ApiMethodContants.POST,
-    data
+    data,
   })
 }
 
-export function deleteFile (params: OssApiResult): Promise<ResultData<OssApiResult>> {
+export function deleteFile(params: OssApiResult): Promise<ResultData<OssApiResult>> {
   return http.request<ResultData<OssApiResult>>({
     url: `${config.api.baseUrl}/oss/delete`,
     method: ApiMethodContants.DELETE,
-    params
+    params,
   })
 }

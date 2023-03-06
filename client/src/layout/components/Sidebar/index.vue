@@ -12,8 +12,13 @@
         :collapse-transition="false"
         mode="vertical"
         class="nest-menu"
-        >
-        <sidebar-item v-for="route in permRoutes" :key="route.path" :item="route" :base-path="route.path"></sidebar-item>
+      >
+        <sidebar-item
+          v-for="route in permRoutes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+        ></sidebar-item>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -30,7 +35,7 @@ import SidebarItem from './SidebarItem.vue'
 export default defineComponent({
   name: 'Sidebar',
   components: { Logo, SidebarItem },
-  setup () {
+  setup() {
     const store = useStore()
     const permRoutes = computed(() => store.state.permission.routes)
 
@@ -52,9 +57,9 @@ export default defineComponent({
       variables: {
         menuBg: '#304156',
         menuText: '#bfcbd9',
-        menuActiveText: '#409EFF'
-      }
+        menuActiveText: '#409EFF',
+      },
     }
-  }
+  },
 })
 </script>

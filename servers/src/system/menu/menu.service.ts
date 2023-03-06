@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import {getManager, Repository, In, DataSource} from 'typeorm'
+import { getManager, Repository, In, DataSource } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 import { plainToInstance } from 'class-transformer'
 
@@ -19,7 +19,7 @@ export class MenuService {
     private readonly menuRepo: Repository<MenuEntity>,
     @InjectRepository(MenuPermEntity)
     private readonly menuPermRepo: Repository<MenuPermEntity>,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(dto: CreateMenuDto): Promise<ResultData> {
@@ -79,7 +79,10 @@ export class MenuService {
       // 删除原有接口权限权限
       await this.menuPermRepo.delete({ menuId: dto.id })
       // 新的接口权限入库
-      const menuPermDto = plainToInstance(MenuPermEntity, dto.menuPermList.map(v => ({ menuId: dto.id, ...v })))
+      const menuPermDto = plainToInstance(
+        MenuPermEntity,
+        dto.menuPermList.map((v) => ({ menuId: dto.id, ...v })),
+      )
       await transactionalEntityManager.save<MenuPermEntity>(menuPermDto)
       delete dto.menuPermList
       // excludeExtraneousValues true  排除无关属性。 但需要在实体类中 将属性使用 @Expose()

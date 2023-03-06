@@ -17,12 +17,7 @@ import { RouteDto } from './dto/route.dto'
 
 @Injectable()
 export class PermService {
-  constructor(
-    private readonly http: HttpService,
-    private readonly config: ConfigService,
-    private readonly redisService: RedisService,
-    private dataSource: DataSource
-  ) {}
+  constructor(private readonly http: HttpService, private readonly config: ConfigService, private readonly redisService: RedisService, private dataSource: DataSource) {}
 
   /**
    * 查询个人 拥有的 api 权限
@@ -61,7 +56,7 @@ export class PermService {
       .leftJoinAndSelect('sys_menu_perm', 'mp', 'rm.menu_id = mp.menu_id')
       .where('ur.user_id = :userId and mp.menu_id != 1', { userId })
       .getRawMany()
-    const perms = permsResult.map(v => ({ path: v.mp_api_url, method: v.mp_api_method }))
+    const perms = permsResult.map((v) => ({ path: v.mp_api_url, method: v.mp_api_method }))
     await this.redisService.set(redisKey, JSON.stringify(perms), ms(this.config.get<string>('jwt.expiresin')) / 1000)
     return perms
   }
@@ -73,7 +68,7 @@ export class PermService {
    * @param userType
    * @returns
    */
-  async findUserMenus(userId: string, userType: UserType): Promise<MenuEntity[]>{
+  async findUserMenus(userId: string, userType: UserType): Promise<MenuEntity[]> {
     const redisKey = getRedisKey(RedisKeyPrefix.USER_MENU, userId)
     const result = await this.redisService.get(redisKey)
     if (result) return JSON.parse(result)
@@ -90,22 +85,24 @@ export class PermService {
         .where('ur.user_id = :userId', { userId })
         .getRawMany()
     }
-    const menus = userType === UserType.SUPER_ADMIN ?
-      menusResult.map(v => ({
-        id: v.id,
-        parentId: v.parent_id,
-        name: v.name,
-        type: v.type,
-        code: v.code,
-        orderNum: v.order_num
-      })) : menusResult.map(v => ({
-        id: v.m_id,
-        parentId: v.m_parent_id,
-        name: v.m_name,
-        type: v.m_type,
-        code: v.m_code,
-        orderNum: v.m_order_num
-      }))
+    const menus =
+      userType === UserType.SUPER_ADMIN
+        ? menusResult.map((v) => ({
+          id: v.id,
+          parentId: v.parent_id,
+          name: v.name,
+          type: v.type,
+          code: v.code,
+          orderNum: v.order_num,
+        }))
+        : menusResult.map((v) => ({
+          id: v.m_id,
+          parentId: v.m_parent_id,
+          name: v.m_name,
+          type: v.m_type,
+          code: v.m_code,
+          orderNum: v.m_order_num,
+        }))
     await this.redisService.set(redisKey, JSON.stringify(menus), ms(this.config.get<string>('jwt.expiresin')) / 1000)
     return menus
   }
@@ -144,7 +141,7 @@ export class PermService {
     return routes
   }
 
-  async findAppAllRoutes () {
+  async findAppAllRoutes() {
     const routes = await this.findAppAllRoutesBySwaggerApi()
     return ResultData.ok(routes)
   }

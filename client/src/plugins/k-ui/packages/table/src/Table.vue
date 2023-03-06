@@ -1,16 +1,29 @@
-
 <template>
   <section class="k-table-container">
-    <el-table ref="elTableRef" :data="list" v-bind="$attrs" style="width: 100%;" v-loading="loading" >
+    <el-table ref="elTableRef" :data="list" v-bind="$attrs" style="width: 100%" v-loading="loading">
       <slot v-if="mode === 'render'"></slot>
       <template v-if="mode === 'config'">
         <!-- 多选列 -->
-        <el-table-column type="selection" align="center" width="55" v-if="selection" ></el-table-column>
+        <el-table-column type="selection" align="center" width="55" v-if="selection"></el-table-column>
         <!-- 索引列 -->
-        <el-table-column type="index" :label="indexLabel" align="center" width="50" v-if="index" :index="indexMethodFn" ></el-table-column>
-        <el-table-column v-bind="column"  v-for="(column, index) in columns" :align="column.align || 'center'" :key="`${column.label}_${index}`" >
+        <el-table-column
+          type="index"
+          :label="indexLabel"
+          align="center"
+          width="50"
+          v-if="index"
+          :index="indexMethodFn"
+        ></el-table-column>
+        <el-table-column
+          v-bind="column"
+          v-for="(column, index) in columns"
+          :align="column.align || 'center'"
+          :key="`${column.label}_${index}`"
+        >
           <template #default="scope" v-if="!!column.slot">
-            <slot :name="column.prop" v-bind="{ ...scope, $index: indexMethodFn(index) }"  >{{ scope.row[column.prop] }}</slot>
+            <slot :name="column.prop" v-bind="{ ...scope, $index: indexMethodFn(index) }">{{
+              scope.row[column.prop]
+            }}</slot>
           </template>
         </el-table-column>
       </template>
@@ -28,8 +41,8 @@
       :total="total"
       background
       v-bind="pagination"
-      @size-change="size => refreshData({ size, page: 1 })"
-      @current-change="page => refreshData({ page })"
+      @size-change="(size) => refreshData({ size, page: 1 })"
+      @current-change="(page) => refreshData({ page })"
       class="k-pagination"
     >
     </el-pagination>
@@ -62,7 +75,7 @@ export default defineComponent({
       default: 'config',
       validator: (val) => {
         return ['config', 'render'].includes(val)
-      }
+      },
     },
     auto: Boolean,
     callback: Function,
@@ -72,54 +85,56 @@ export default defineComponent({
       default: () => {
         return {
           list: [],
-          total: 0
+          total: 0,
         }
-      }
+      },
     },
     isPager: {
       type: Boolean,
-      default: true
+      default: true,
     },
     pageNum: {
       type: Number,
-      default: 1
+      default: 1,
     },
     pageSize: {
       type: Number,
-      default: 10
+      default: 10,
     },
     pagination: {
       type: Object,
       default: () => {
         return {}
-      }
+      },
     },
     columns: Array,
     selection: Boolean,
     index: Boolean,
     continuousIndex: {
       type: Boolean,
-      default: true
+      default: true,
     },
     indexMethod: Function,
     indexLabel: {
       type: String,
-      default: '序号'
-    }
+      default: '序号',
+    },
   },
   inheritAttrs: false,
-  setup (props) {
+  setup(props) {
     // 默认值
-    const list = computed(() => props.data.list.map(v => {
-      if (props.mode === 'config') {
-        props.columns.forEach(column => {
-          if ([null, undefined, ''].includes(v[column.prop])) {
-            v[column.prop] = column.default || ''
-          }
-        })
-      }
-      return v
-    }))
+    const list = computed(() =>
+      props.data.list.map((v) => {
+        if (props.mode === 'config') {
+          props.columns.forEach((column) => {
+            if ([null, undefined, ''].includes(v[column.prop])) {
+              v[column.prop] = column.default || ''
+            }
+          })
+        }
+        return v
+      }),
+    )
     const total = computed(() => props.data.total)
     const elTableRef = ref()
     // 分页逻辑
@@ -143,8 +158,8 @@ export default defineComponent({
       pager,
       elTableRef,
       indexMethodFn,
-      refreshData
+      refreshData,
     }
-  }
+  },
 })
 </script>

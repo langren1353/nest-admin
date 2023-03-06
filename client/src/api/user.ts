@@ -49,80 +49,80 @@ export interface BindUserData {
   type: 'create' | 'cancel'
 }
 
-export function login (loginData: UserLogin): Promise<ResultData<LoginResult>> {
+export function login(loginData: UserLogin): Promise<ResultData<LoginResult>> {
   return http.request<ResultData<LoginResult>>({
     url: `${config.api.baseUrl}/login`,
     method: ApiMethodContants.POST,
-    data: loginData
+    data: loginData,
   })
 }
 
-export function updateToken (): Promise<ResultData<LoginResult>> {
+export function updateToken(): Promise<ResultData<LoginResult>> {
   return http.request({
     url: `${config.api.baseUrl}/update/token`,
     method: ApiMethodContants.POST,
-    headers: { Authorization: 'Bearer ' + getRefreshToken() }
+    headers: { Authorization: `Bearer ${getRefreshToken()}` },
   })
 }
 
-export function getUserInfo (id?: string): Promise<ResultData<UserApiResult>> {
+export function getUserInfo(id?: string): Promise<ResultData<UserApiResult>> {
   return http.request<ResultData<UserApiResult>>({
     url: `${config.api.baseUrl}/user/one/info`,
     method: ApiMethodContants.GET,
-    params: { id }
+    params: { id },
   })
 }
 
-export function getUserList (params: QueryUserList): Promise<ResultData<ListResultData<UserApiResult>>> {
+export function getUserList(params: QueryUserList): Promise<ResultData<ListResultData<UserApiResult>>> {
   return http.request<ResultData<ListResultData<UserApiResult>>>({
     url: `${config.api.baseUrl}/user/list`,
     method: ApiMethodContants.GET,
-    params
+    params,
   })
 }
 
-export function updateUser (data: ICreateOrUpdateUser): Promise<ResultData<null>> {
+export function updateUser(data: ICreateOrUpdateUser): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/user`,
     method: ApiMethodContants.PUT,
-    data
+    data,
   })
 }
 
-export function resetPassword (userId: string): Promise<ResultData<null>> {
+export function resetPassword(userId: string): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/user/password/reset/${userId}`,
-    method: ApiMethodContants.PUT
+    method: ApiMethodContants.PUT,
   })
 }
 
-export function updateStatus (data: ICreateOrUpdateUser): Promise<ResultData<null>> {
+export function updateStatus(data: ICreateOrUpdateUser): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/user/status/change`,
     method: ApiMethodContants.PUT,
-    data
+    data,
   })
 }
 
-export function getUserRoleIds (id: string): Promise<ResultData<number[]>> {
+export function getUserRoleIds(id: string): Promise<ResultData<number[]>> {
   return http.request<ResultData<number[]>>({
     url: `${config.api.baseUrl}/user/${id}/role`,
-    method: ApiMethodContants.GET
+    method: ApiMethodContants.GET,
   })
 }
 
-export function bindRoleUser (data: BindUserData): Promise<ResultData<null>> {
+export function bindRoleUser(data: BindUserData): Promise<ResultData<null>> {
   return http.request<ResultData<null>>({
     url: `${config.api.baseUrl}/user/role/update`,
     method: ApiMethodContants.POST,
-    data
+    data,
   })
 }
 
-export function dowmloadUserTemplate () {
+export function dowmloadUserTemplate() {
   return http.request({
     url: `${config.api.tmplDownloadUrl}/用户导入模板.xlsx`,
     method: ApiMethodContants.GET,
-    responseType: 'blob'
+    responseType: 'blob',
   })
 }

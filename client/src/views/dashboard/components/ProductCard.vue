@@ -9,7 +9,7 @@
     <div class="product-card__body">
       <div class="product__info-progress">
         <span>进度</span>
-        <span>{{ `${percent}%`  }}</span>
+        <span>{{ `${percent}%` }}</span>
       </div>
       <div class="product__progress">
         <el-progress :stroke-width="8" :show-text="false" :color="customColors" :percentage="percent"></el-progress>
@@ -22,8 +22,10 @@
           <span>{{ updateDate }}</span>
         </div>
         <div>
-          <el-avatar class="product__user-avatar" size="small" v-for="(user,i) in avatars" :src="user" :key="i" />
-          <el-avatar class="product__user-avatar" size="small" v-if="userAvatar.length > 2">{{`+${userAvatar.length - 2}`}}</el-avatar>
+          <el-avatar class="product__user-avatar" size="small" v-for="(user, i) in avatars" :src="user" :key="i" />
+          <el-avatar class="product__user-avatar" size="small" v-if="userAvatar.length > 2">{{
+            `+${userAvatar.length - 2}`
+          }}</el-avatar>
         </div>
       </div>
     </div>
@@ -37,41 +39,41 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     desc: {
       type: String,
-      default: ''
+      default: '',
     },
     percent: Number,
     updateDate: {
       type: String,
-      default: ''
+      default: '',
     },
     userAvatar: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
-  data () {
+  data() {
     return {
       customColors: [
         { color: '#f56c6c', percentage: 20 },
         { color: '#e6a23c', percentage: 40 },
         { color: '#5cb87a', percentage: 60 },
         { color: '#1989fa', percentage: 80 },
-        { color: '#6f7ad3', percentage: 100 }
-      ]
+        { color: '#6f7ad3', percentage: 100 },
+      ],
     }
   },
   computed: {
-    avatars () {
+    avatars() {
       if (this.userAvatar.length > 2) {
         return this.userAvatar.filter((v, i) => i < 2)
       }
       return this.userAvatar
-    }
-  }
+    },
+  },
 })
 </script>
 

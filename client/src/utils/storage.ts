@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode'
 export enum AppStorageKey {
   TOKEN = 'token',
   REFRESH_TOKEN = 'refresh-token',
-  REFRESH_TOKEN_EXP = 'rt-exp'
+  REFRESH_TOKEN_EXP = 'rt-exp',
 }
 
 interface ItokenDecode {
@@ -19,7 +19,7 @@ interface ItokenDecode {
  * @param token
  * @param refreshToken
  */
-export function setToken (token: string, refreshToken: string): void {
+export function setToken(token: string, refreshToken: string): void {
   sessionStorage.setItem(AppStorageKey.TOKEN, token)
   setRefreshToken(refreshToken)
   // 解析过期时间，设置过期
@@ -27,26 +27,26 @@ export function setToken (token: string, refreshToken: string): void {
   setRTExp(rtExp)
 }
 
-export function getToken (): string | null {
+export function getToken(): string | null {
   return sessionStorage.getItem(AppStorageKey.TOKEN)
 }
 
-export function setRefreshToken (refreshToken: string): void {
+export function setRefreshToken(refreshToken: string): void {
   sessionStorage.setItem(AppStorageKey.REFRESH_TOKEN, refreshToken)
 }
 
-export function getRefreshToken (): string | null {
+export function getRefreshToken(): string | null {
   return sessionStorage.getItem(AppStorageKey.REFRESH_TOKEN)
 }
 
-export function setRTExp (exp: number): void {
+export function setRTExp(exp: number): void {
   sessionStorage.setItem(AppStorageKey.REFRESH_TOKEN_EXP, `${exp}`)
 }
-export function getRTExp (): number {
+export function getRTExp(): number {
   const rtExpStr = sessionStorage.getItem(AppStorageKey.REFRESH_TOKEN_EXP)
   return rtExpStr ? Number(rtExpStr) : 0
 }
 
-export function clearAll () {
+export function clearAll() {
   sessionStorage.clear()
 }

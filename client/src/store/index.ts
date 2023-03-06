@@ -18,12 +18,12 @@ export const store = createStore<RootState>({
     app: AppModule,
     tagsView: TagsViewModule,
     permission: PermissionModule,
-    user: UserModule
-  }
+    user: UserModule,
+  },
 })
 
 export const key: InjectionKey<Store<RootState>> = Symbol()
 
-export function useStore () {
+export function useStore() {
   return baseUseStore(key)
 }

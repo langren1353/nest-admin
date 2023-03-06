@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository, InjectEntityManager } from '@nestjs/typeorm';
-import { Repository, EntityManager, DataSource } from 'typeorm';
+import { InjectRepository, InjectEntityManager } from '@nestjs/typeorm'
+import { Repository, EntityManager, DataSource } from 'typeorm'
 import { plainToInstance, instanceToPlain } from 'class-transformer'
 
 import { ResultData } from '../../common/utils/result'
@@ -21,7 +21,7 @@ export class UserRoleService {
     @InjectEntityManager()
     private readonly userRoleManager: EntityManager,
     private readonly redisService: RedisService,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
   ) {}
 
   /** 创建 or 更新用户-角色 */
@@ -58,10 +58,9 @@ export class UserRoleService {
       }
     })
     if (res) {
-      await this.redisService.del(userIds.map(userId => getRedisKey(RedisKeyPrefix.USER_ROLE, userId)))
+      await this.redisService.del(userIds.map((userId) => getRedisKey(RedisKeyPrefix.USER_ROLE, userId)))
       return ResultData.ok()
-    }
-    else return ResultData.fail(AppHttpCode.SERVICE_ERROR, `${createOrCancel === 'create' ? '添加' : '取消'}用户关联失败`)
+    } else return ResultData.fail(AppHttpCode.SERVICE_ERROR, `${createOrCancel === 'create' ? '添加' : '取消'}用户关联失败`)
   }
 
   /** 查询单个用户所拥有的角色 id */
@@ -88,11 +87,7 @@ export class UserRoleService {
       res = await this.dataSource
         .createQueryBuilder('sys_user', 'su')
         .where((qb: any) => {
-          const subQuery = qb.subQuery()
-            .select(['sur.user_id'])
-            .from('sys_user_role', 'sur')
-            .where('sur.role_id = :roleId', { roleId })
-            .getQuery()
+          const subQuery = qb.subQuery().select(['sur.user_id']).from('sys_user_role', 'sur').where('sur.role_id = :roleId', { roleId }).getQuery()
           return `su.status = 1 and su.id not in ${subQuery}`
         })
         .skip(size * (page - 1))

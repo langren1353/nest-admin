@@ -1,16 +1,28 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" class="hamburger-container" :is-active="sidebar.opened" @toggle-click="toggleSideBar"></hamburger>
+    <hamburger
+      id="hamburger-container"
+      class="hamburger-container"
+      :is-active="sidebar.opened"
+      @toggle-click="toggleSideBar"
+    ></hamburger>
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" @visible-change="visibleChange">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+        @visible-change="visibleChange"
+      >
         <div class="avatar-wrapper">
           <el-avatar :src="userAvatar" fit="fill" :size="40" class="user-avatar" shape="circle"></el-avatar>
           <div class="user-name-wrapper">
             <span>{{ userAccount }}</span>
-            <svg-icon icon-class="arrow-down" :class="{ 'arrow-down': true, 'arrow-down-show': dropdownShow }"></svg-icon>
+            <svg-icon
+              icon-class="arrow-down"
+              :class="{ 'arrow-down': true, 'arrow-down-show': dropdownShow }"
+            ></svg-icon>
           </div>
         </div>
         <template #dropdown>
@@ -34,13 +46,13 @@ import { computed, defineComponent, ref } from 'vue'
 import { useStore } from '@/store'
 import Hamburger from '_c/Hamburger/index.vue'
 import Breadcrumb from '_c/Breadcrumb/index.vue'
-import { clearAll } from '../../../utils/storage'
 import { ElMessageBox } from 'element-plus'
+import { clearAll } from '../../../utils/storage'
 
 export default defineComponent({
   name: 'Navbar',
   components: { Hamburger, Breadcrumb },
-  setup () {
+  setup() {
     const store = useStore()
 
     const sidebar = computed(() => store.state.app.sidebar)
@@ -57,7 +69,7 @@ export default defineComponent({
       ElMessageBox.confirm('是否确认退出当前登录', '提示', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         clearAll()
         window.location.reload()
@@ -76,9 +88,9 @@ export default defineComponent({
       toggleSideBar,
       loginout,
       dropdownShow,
-      visibleChange
+      visibleChange,
     }
-  }
+  },
 })
 </script>
 
@@ -88,18 +100,18 @@ export default defineComponent({
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -126,10 +138,10 @@ export default defineComponent({
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }
@@ -152,7 +164,7 @@ export default defineComponent({
           margin-left: 10px;
         }
         .arrow-down {
-          transition: all .28s;
+          transition: all 0.28s;
         }
         .arrow-down-show {
           transform: rotate(180deg);

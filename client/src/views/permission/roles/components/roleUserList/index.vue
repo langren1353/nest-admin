@@ -7,15 +7,20 @@
       </span>
     </h3>
     <!-- 当前角色关联的用户 -->
-    <k-table ref="bindRoleUserTableRef" v-bind="userData" :callback="getRoleUserList" :loading="loading"  stripe>
-      <template #avatar="{row}">
+    <k-table ref="bindRoleUserTableRef" v-bind="userData" :callback="getRoleUserList" :loading="loading" stripe>
+      <template #avatar="{ row }">
         <el-avatar :src="row.avatar" :size="40" shape="circle"></el-avatar>
       </template>
-       <template #status="{row}">
-        <k-badge :type="row.status === 1 ? 'primary' : 'danger'" :content="row.status === 1 ? '使用中' : '已禁用'"></k-badge>
+      <template #status="{ row }">
+        <k-badge
+          :type="row.status === 1 ? 'primary' : 'danger'"
+          :content="row.status === 1 ? '使用中' : '已禁用'"
+        ></k-badge>
       </template>
-      <template #actions="{row}">
-        <el-button type="danger" size="small" plain @click="cancelBindUserEvent(row)" v-perm="'perm_roles:bind'">解除关联</el-button>
+      <template #actions="{ row }">
+        <el-button type="danger" size="small" plain @click="cancelBindUserEvent(row)" v-perm="'perm_roles:bind'"
+          >解除关联</el-button
+        >
       </template>
     </k-table>
 
@@ -40,10 +45,10 @@ export default defineComponent({
   props: {
     currId: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
-  setup (props) {
+  setup(props) {
     const userData = ref<IKTableProps<UserApiResult>>({
       mode: 'config',
       data: { list: [], total: 0 },
@@ -54,10 +59,15 @@ export default defineComponent({
         { label: '手机号', prop: 'phoneNum' },
         { label: '邮箱', prop: 'email' },
         { label: '状态', prop: 'status', slot: true, width: '90' },
-        { label: '注册时间', prop: 'createDate', width: '100', formatter: (row: UserApiResult) => jsonTimeFormat(row.createDate as string) },
-        { label: '操作', prop: 'actions', slot: true, width: '120' }
+        {
+          label: '注册时间',
+          prop: 'createDate',
+          width: '100',
+          formatter: (row: UserApiResult) => jsonTimeFormat(row.createDate as string),
+        },
+        { label: '操作', prop: 'actions', slot: true, width: '120' },
       ],
-      index: true
+      index: true,
     })
     const loading = ref<boolean>(false)
 
@@ -65,7 +75,14 @@ export default defineComponent({
     const queryReq = ref<QueryUserList>({ page: 1, size: 10 })
     const getRoleUserList = async ({ page, size }: Pagination) => {
       loading.value = true
-      const res = await getUserList({ ...queryReq.value, page, size, roleId: props.currId, status: 1, hasCurrRole: 1 } as QueryUserList)
+      const res = await getUserList({
+        ...queryReq.value,
+        page,
+        size,
+        roleId: props.currId,
+        status: 1,
+        hasCurrRole: 1,
+      } as QueryUserList)
       loading.value = false
       if (res?.code === 200) {
         const data = res.data as ListResultData<UserApiResult>
@@ -83,12 +100,15 @@ export default defineComponent({
 
     const bindRoleUserTableRef = ref()
 
-    watch(() => props.currId, (val) => {
-      if (val) {
-        queryReq.value = { page: 1, size: 10, roleId: val }
-        getRoleUserList({ page: 1, size: 10 })
-      }
-    })
+    watch(
+      () => props.currId,
+      (val) => {
+        if (val) {
+          queryReq.value = { page: 1, size: 10, roleId: val }
+          getRoleUserList({ page: 1, size: 10 })
+        }
+      },
+    )
     // 绑定成功回调
     const bindUserSuccess = () => {
       bindRoleUserTableRef.value.refreshData({ page: 1, size: 10 })
@@ -96,15 +116,11 @@ export default defineComponent({
 
     const cancelBindUserEvent = async (row: UserApiResult) => {
       try {
-        await ElMessageBox.confirm(
-          `是否确认取消用户【${row.account}】与当前角色关联`,
-          '提示',
-          {
-            confirmButtonText: '确认',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-        )
+        await ElMessageBox.confirm(`是否确认取消用户【${row.account}】与当前角色关联`, '提示', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
         loading.value = true
         const req: BindUserData = { roleId: props.currId, userIds: [row.id as string], type: 'cancel' }
         const res = await bindRoleUser(req)
@@ -126,9 +142,9 @@ export default defineComponent({
       showbindUser,
       bindUserEvent,
       bindUserSuccess,
-      cancelBindUserEvent
+      cancelBindUserEvent,
     }
-  }
+  },
 })
 </script>
 

@@ -22,7 +22,6 @@ import { UserRoleService } from './role/user-role.service'
 import { UserEntity } from './user.entity'
 import { UserRoleEntity } from './role/user-role.entity'
 
-
 import { CreateUserDto } from './dto/create-user.dto'
 import { FindUserListDto } from './dto/find-user-list.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -39,7 +38,7 @@ export class UserService {
     private readonly config: ConfigService,
     private readonly redisService: RedisService,
     private readonly jwtService: JwtService,
-    private readonly userRoleService: UserRoleService
+    private readonly userRoleService: UserRoleService,
   ) {}
 
   async findOneById(id: string): Promise<UserEntity> {
@@ -85,11 +84,14 @@ export class UserService {
    */
   async login(account: string, password: string): Promise<ResultData> {
     let user = null
-    if (validPhone(account)) { // 手机登录
+    if (validPhone(account)) {
+      // 手机登录
       user = await this.userRepo.findOne({ where: { phoneNum: account } })
-    } else if (validEmail(account)) { // 邮箱
+    } else if (validEmail(account)) {
+      // 邮箱
       user = await this.userRepo.findOne({ where: { email: account } })
-    } else { // 帐号
+    } else {
+      // 帐号
       user = await this.findOneByAccount(account)
     }
     if (!user) return ResultData.fail(AppHttpCode.USER_PASSWORD_INVALID, '帐号或密码错误')
@@ -101,7 +103,7 @@ export class UserService {
     return ResultData.ok(data)
   }
 
-  async updateToken (userId: string): Promise<ResultData> {
+  async updateToken(userId: string): Promise<ResultData> {
     const data = this.genToken({ id: userId })
     return ResultData.ok(data)
   }
@@ -109,7 +111,7 @@ export class UserService {
   /**
    * 批量导入用户
    */
-  async importUsers (file: Express.Multer.File): Promise<ResultData> {
+  async importUsers(file: Express.Multer.File): Promise<ResultData> {
     const acceptFileType = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     if (!acceptFileType.indexOf(file.mimetype)) return ResultData.fail(AppHttpCode.FILE_TYPE_ERROR, '文件类型错误，请上传 .xls 或 .xlsx 文件')
     if (file.size > 5 * 1024 * 1024) return ResultData.fail(AppHttpCode.FILE_SIZE_EXCEED_LIMIT, '文件大小超过，最大支持 5M')
@@ -124,11 +126,12 @@ export class UserService {
     for (let i = 1, len = workSheet[0].data.length; i < len; i++) {
       const dataArr = workSheet[0].data[i] as Array<any>
       if (dataArr.length === 0) break
-      const [ account, phone, email, avatar ] = dataArr
-      userArr.push({ account, phoneNum: phone, email, avatar})
+      const [account, phone, email, avatar] = dataArr
+      userArr.push({ account, phoneNum: phone, email, avatar })
       if (account && !accountMap.has(account)) {
         accountMap.set(account, [])
-      } else if (account) { // 有重复的
+      } else if (account) {
+        // 有重复的
         accountMap.get(account).push(i + 1)
       } else {
         return ResultData.fail(AppHttpCode.DATA_IS_EMPTY, '上传文件帐号有空数据，请检查后再导入')
@@ -140,66 +143,66 @@ export class UserService {
       }
       if (email && !emailMap.has(email)) {
         emailMap.set(email, [])
-      } else if (email){
+      } else if (email) {
         emailMap.get(email).push(i + 1)
       }
     }
     const accountErrArr = []
-    for (let [key, val] of accountMap) {
+    for (const [key, val] of accountMap) {
       if (val.length > 0) {
         accountErrArr.push({ key, val })
       }
     }
     const phoneErrArr = []
-    for (let [key, val] of phoneMap) {
+    for (const [key, val] of phoneMap) {
       if (val.length > 0) {
         phoneErrArr.push({ key, val })
       }
     }
     const emailErrArr = []
-    for (let [key, val] of emailMap) {
+    for (const [key, val] of emailMap) {
       if (val.length > 0) {
         emailErrArr.push({ key, val })
       }
     }
     if (accountErrArr.length > 0 || phoneErrArr.length > 0 || emailErrArr.length > 0) {
-      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 内部有数据重复或数据有误，请修改调整后上传导入', { account: accountErrArr, phone: phoneErrArr, email: emailErrArr})
+      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 内部有数据重复或数据有误，请修改调整后上传导入', { account: accountErrArr, phone: phoneErrArr, email: emailErrArr })
     }
     // 若 excel 内部无重复，则需要判断 excel 中数据 是否与 数据库的数据重复
-    const existingAccount = await this.userRepo.find({ select: ['account'],  where: { account: In(userArr.map(v => v.account)) } })
+    const existingAccount = await this.userRepo.find({ select: ['account'], where: { account: In(userArr.map((v) => v.account)) } })
     if (existingAccount.length > 0) {
-      existingAccount.forEach(v => {
+      existingAccount.forEach((v) => {
         // userArr 中的数据 下标 换算成 excel 中的 行号 + 2
-        accountErrArr.push({ key: v.account, val: [userArr.findIndex(m => m.account === v.account) + 2] })
+        accountErrArr.push({ key: v.account, val: [userArr.findIndex((m) => m.account === v.account) + 2] })
       })
     }
     // 手机号、邮箱非必填，所以查询存在重复的 过滤掉 空数据
-    const existingPhone = await this.userRepo.find({ select: ['phoneNum'],  where: { account: In(userArr.map(v => v.phoneNum).filter(v => !!v)) } })
+    const existingPhone = await this.userRepo.find({ select: ['phoneNum'], where: { account: In(userArr.map((v) => v.phoneNum).filter((v) => !!v)) } })
     if (existingPhone.length > 0) {
-      existingPhone.forEach(v => {
+      existingPhone.forEach((v) => {
         // userArr 中的数据 下标 换算成 excel 中的 行号 + 2
-        phoneErrArr.push({ key: v.phoneNum, val: [userArr.findIndex(m => m.phoneNum === v.phoneNum) + 2]})
+        phoneErrArr.push({ key: v.phoneNum, val: [userArr.findIndex((m) => m.phoneNum === v.phoneNum) + 2] })
       })
     }
-    const existingEmail = await this.userRepo.find({ select: ['email'],  where: { account: In(userArr.map(v => v.email).filter(v => !!v)) } })
+    const existingEmail = await this.userRepo.find({ select: ['email'], where: { account: In(userArr.map((v) => v.email).filter((v) => !!v)) } })
     if (existingEmail.length > 0) {
-      existingEmail.forEach(v => {
+      existingEmail.forEach((v) => {
         // userArr 中的数据 下标 换算成 excel 中的 行号 + 2
-        emailErrArr.push({ key: v.email, val: [userArr.findIndex(m => m.email === v.email) + 2] })
+        emailErrArr.push({ key: v.email, val: [userArr.findIndex((m) => m.email === v.email) + 2] })
       })
     }
     if (accountErrArr.length > 0 || phoneErrArr.length > 0 || emailErrArr.length > 0) {
-      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 系统中已有重复项，请修改调整后上传导入', { account: accountErrArr, phone: phoneErrArr, email: emailErrArr})
+      return ResultData.fail(AppHttpCode.PARAM_INVALID, '导入 excel 系统中已有重复项，请修改调整后上传导入', { account: accountErrArr, phone: phoneErrArr, email: emailErrArr })
     }
     // excel 与数据库无重复，准备入库
     const password = this.config.get<string>('user.initialPassword')
-    userArr.forEach(v => {
+    userArr.forEach((v) => {
       const salt = genSaltSync()
       const encryptPw = hashSync(password, salt)
       v['password'] = encryptPw
       v['salt'] = salt
     })
-    const result =  await this.userManager.transaction(async (transactionalEntityManager) => {
+    const result = await this.userManager.transaction(async (transactionalEntityManager) => {
       return await transactionalEntityManager.save<UserEntity>(plainToInstance(UserEntity, userArr, { ignoreDecorators: true }))
     })
     return ResultData.ok(instanceToPlain(result))
@@ -247,7 +250,7 @@ export class UserService {
    * 更新或重置用户密码
    * @reset 是否重置, false 则使用传入的 password 更新
    */
-  async updatePassword (userId: string, password: string, reset: boolean): Promise<ResultData> {
+  async updatePassword(userId: string, password: string, reset: boolean): Promise<ResultData> {
     const existing = await this.userRepo.findOne({ where: { id: userId } })
     if (!existing) return ResultData.fail(AppHttpCode.USER_NOT_FOUND, `用户不存在或已删除，${reset ? '重置' : '更新'}失败`)
     if (existing.status === 0) return ResultData.fail(AppHttpCode.USER_ACCOUNT_FORBIDDEN, '当前用户已被禁用，不可重置用户密码')
@@ -300,13 +303,12 @@ export class UserService {
     return ResultData.ok(instanceToPlain(user))
   }
 
-
   /**
    * 生成 token 与 刷新 token
    * @param payload
    * @returns
    */
-  genToken (payload: { id: string }): CreateTokenDto {
+  genToken(payload: { id: string }): CreateTokenDto {
     const accessToken = `Bearer ${this.jwtService.sign(payload)}`
     const refreshToken = this.jwtService.sign(payload, { expiresIn: this.config.get('jwt.refreshExpiresIn') })
     return { accessToken, refreshToken }

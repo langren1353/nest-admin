@@ -1,8 +1,8 @@
 <template>
-  <div class="sidebar-logo-container" :class="{ 'collapse': collapse }">
+  <div class="sidebar-logo-container" :class="{ collapse: collapse }">
     <router-link class="sidebar-logo-link" to="/">
-      <img v-if="logo" :src="logo" class="sidebar-logo">
-      <h1 v-if="!collapse || !logo" class="sidebar-title">{{ title }} </h1>
+      <img v-if="logo" :src="logo" class="sidebar-logo" />
+      <h1 v-if="!collapse || !logo" class="sidebar-title">{{ title }}</h1>
     </router-link>
   </div>
 </template>
@@ -17,20 +17,19 @@ export default defineComponent({
   props: {
     collapse: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
-  data () {
+  data() {
     return {
       title: 'nest-admin',
-      logo: nestjsLogo
+      logo: nestjsLogo,
     }
-  }
+  },
 })
 </script>
 
 <style lang="scss" scoped>
-
 .sidebar-logo-container {
   position: relative;
   width: 100%;

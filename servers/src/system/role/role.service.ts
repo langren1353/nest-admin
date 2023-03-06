@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { InjectRepository, InjectEntityManager } from '@nestjs/typeorm';
-import { Repository, EntityManager, DataSource } from 'typeorm';
+import { InjectRepository, InjectEntityManager } from '@nestjs/typeorm'
+import { Repository, EntityManager, DataSource } from 'typeorm'
 import { plainToInstance } from 'class-transformer'
 
 import { AppHttpCode } from '../../common/enums/code.enum'
@@ -15,7 +15,6 @@ import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { UserEntity } from '../user/user.entity'
 
-
 @Injectable()
 export class RoleService {
   constructor(
@@ -27,7 +26,7 @@ export class RoleService {
     private readonly userRoleRepo: Repository<UserRoleEntity>,
     @InjectEntityManager()
     private readonly roleManager: EntityManager,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(dto: CreateRoleDto, user: UserEntity): Promise<ResultData> {
@@ -105,11 +104,7 @@ export class RoleService {
     if (type === UserType.SUPER_ADMIN) {
       roleData = await this.roleRepo.find({ order: { id: 'DESC' } })
     } else {
-      roleData = await this.dataSource
-        .createQueryBuilder('sys_role', 'sr')
-        .leftJoinAndSelect('sys_user_role', 'sur', 'sr.id = sur.role_id')
-        .where('sur.user_id = :userId', { userId })
-        .getMany()
+      roleData = await this.dataSource.createQueryBuilder('sys_role', 'sr').leftJoinAndSelect('sys_user_role', 'sur', 'sr.id = sur.role_id').where('sur.user_id = :userId', { userId }).getMany()
     }
     return ResultData.ok(roleData)
   }

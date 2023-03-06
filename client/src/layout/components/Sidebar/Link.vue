@@ -13,12 +13,12 @@ export default defineComponent({
   props: {
     to: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
-  setup (props) {
+  setup(props) {
     // computed
-    const type = computed(() => isExternal(props.to) ? 'a' : 'router-link')
+    const type = computed(() => (isExternal(props.to) ? 'a' : 'router-link'))
 
     // methods
     const linkProps = (to: string) => {
@@ -26,18 +26,17 @@ export default defineComponent({
         ? {
           href: to,
           target: '_blank',
-          rel: 'noopener'
+          rel: 'noopener',
         }
         : {
-          to: to
+            to,
         }
     }
 
     return {
       type,
-      linkProps
+      linkProps,
     }
-  }
+  },
 })
-
 </script>

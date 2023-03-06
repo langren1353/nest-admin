@@ -16,7 +16,7 @@ export type BaseRoute = {
   /** 当前路由是否隐藏 */
   hidden?: boolean
   children?: Array<AppRouteRecordRaw>
-  meta?: RouteMeta & Meta,
+  meta?: RouteMeta & Meta
   /** 总是显示该路由 */
   alwaysShow?: boolean
   /** 不显示子级路由 */

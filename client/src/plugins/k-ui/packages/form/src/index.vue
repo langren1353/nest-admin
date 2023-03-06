@@ -5,18 +5,39 @@
       <el-form-item v-for="(item, index) in formItemsTmp" :label="item.label" :prop="item.prop" :key="index">
         <template v-if="!item.slot">
           <!-- 输入框，文本域 -->
-          <el-input v-if="item.component === 'el-input'" v-model.trim="modelValueTmp[item.prop]" v-bind="item"></el-input>
+          <el-input
+            v-if="item.component === 'el-input'"
+            v-model.trim="modelValueTmp[item.prop]"
+            v-bind="item"
+          ></el-input>
           <!-- 选择器 -->
           <el-select v-else-if="item.component === 'el-select'" v-model="modelValueTmp[item.prop]" v-bind="item">
-            <el-option v-for="option in item.options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+            <el-option
+              v-for="option in item.options"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            ></el-option>
           </el-select>
           <!-- 单选组 -->
-          <el-radio-group v-else-if="['el-radio', 'el-radio-button'].includes(item.component)" v-model="modelValueTmp[item.prop]" v-bind="item">
-            <component :is="item.component" v-for="option in item.options" :key="option.label" :label="option.label" >{{ option.content || '' }}</component>
+          <el-radio-group
+            v-else-if="['el-radio', 'el-radio-button'].includes(item.component)"
+            v-model="modelValueTmp[item.prop]"
+            v-bind="item"
+          >
+            <component :is="item.component" v-for="option in item.options" :key="option.label" :label="option.label">{{
+              option.content || ''
+            }}</component>
           </el-radio-group>
           <!-- 多选组 -->
-          <el-checkbox-group v-else-if="['el-checkbox', 'el-checkbox-button'].includes(item.component)" v-model="modelValueTmp[item.prop]" v-bind="item">
-            <component :is="item.component" v-for="option in item.options" :key="option.label" :label="option.label" >{{ option.content || '' }}</component>
+          <el-checkbox-group
+            v-else-if="['el-checkbox', 'el-checkbox-button'].includes(item.component)"
+            v-model="modelValueTmp[item.prop]"
+            v-bind="item"
+          >
+            <component :is="item.component" v-for="option in item.options" :key="option.label" :label="option.label">{{
+              option.content || ''
+            }}</component>
           </el-checkbox-group>
           <!-- 其他 -->
           <component v-else :is="item.component" v-model="modelValueTmp[item.prop]" v-bind="item">
@@ -56,53 +77,63 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     mode: {
       type: String,
       default: 'config',
       validator: (val) => {
         return ['config', 'render'].includes(val)
-      }
+      },
     },
     inline: {
       type: Boolean,
-      default: false
+      default: false,
     },
     formItems: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   emits: ['update:modelValue'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     // 表单本身
     const elFormRef = ref(null)
     // 处理 form-item
     const formItemsTmp = ref(null)
-    watch(() => props.formItems, (val) => {
-      formItemsTmp.value = val.map(v => {
-        // 驼峰 转 中划线
-        return {
-          ...v,
-          ...(v.component ? { component: `el-${v.component.replace(/([a-z])([A-Z])/, '$1-$2').toLocaleLowerCase()}` } : null),
-          ...(v.clearable === undefined ? { clearable: true } : null)
-        }
-      })
-    }, { immediate: true, deep: true })
+    watch(
+      () => props.formItems,
+      (val) => {
+        formItemsTmp.value = val.map((v) => {
+          // 驼峰 转 中划线
+          return {
+            ...v,
+            ...(v.component
+              ? { component: `el-${v.component.replace(/([a-z])([A-Z])/, '$1-$2').toLocaleLowerCase()}` }
+              : null),
+            ...(v.clearable === undefined ? { clearable: true } : null),
+          }
+        })
+      },
+      { immediate: true, deep: true },
+    )
     // 处理 表单绑定值
     const modelValueTmp = ref(null)
-    watch(() => props.modelValue, (val) => {
-      modelValueTmp.value = val
-    }, { immediate: true, deep: true })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        modelValueTmp.value = val
+      },
+      { immediate: true, deep: true },
+    )
     watch(modelValueTmp.value, (val) => {
       emit('update:modelValue', val)
     })
     return {
       elFormRef,
       modelValueTmp,
-      formItemsTmp
+      formItemsTmp,
     }
-  }
+  },
 })
 </script>

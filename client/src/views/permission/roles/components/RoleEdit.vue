@@ -1,11 +1,25 @@
 <template>
-  <el-dialog title="角色编辑" v-model="visible" top="10vh" width="500px" :before-close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog
+    title="角色编辑"
+    v-model="visible"
+    top="10vh"
+    width="500px"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
     <el-form ref="roleFormRef" :model="roleForm" :rules="roleFormRule" label-width="80px">
       <el-form-item label="角色名称" prop="name">
         <el-input v-model.trim="roleForm.name" :maxlength="30" show-word-limit placeholder="请输入角色名称"></el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input type="textarea" v-model.trim="roleForm.remark" :maxlength="100" show-word-limit placeholder="角色备注"></el-input>
+        <el-input
+          type="textarea"
+          v-model.trim="roleForm.remark"
+          :maxlength="100"
+          show-word-limit
+          placeholder="角色备注"
+        ></el-input>
       </el-form-item>
       <el-form-item label="资源授权" prop="">
         <role-menu-tree v-model="currRolePermMenus"></role-menu-tree>
@@ -30,17 +44,17 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     currRole: {
       type: Object as PropType<ICreateOrUpdateRole>,
       default: () => {
         return {}
-      }
-    }
+      },
+    },
   },
   emits: [UPDATE_MODEL_EVENT, 'change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     // dialog
     const visible = ref<boolean>(false)
     const currRolePermMenus = ref<Array<string>>([])
@@ -54,18 +68,21 @@ export default defineComponent({
     // 表单
     const roleForm = ref<ICreateOrUpdateRole>({
       name: '',
-      remark: ''
+      remark: '',
     })
 
-    watch(() => props.modelValue, (val) => {
-      visible.value = val
-      if (val) {
-        roleForm.value = { ...props.currRole }
-        props.currRole?.id && getRolePermsFn(props.currRole.id)
-      } else {
-        currRolePermMenus.value = []
-      }
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        visible.value = val
+        if (val) {
+          roleForm.value = { ...props.currRole }
+          props.currRole?.id && getRolePermsFn(props.currRole.id)
+        } else {
+          currRolePermMenus.value = []
+        }
+      },
+    )
 
     const handleClose = () => {
       emit(UPDATE_MODEL_EVENT, false)
@@ -75,8 +92,8 @@ export default defineComponent({
     const roleFormRule = {
       name: [
         { required: true, message: '请输入角色名称', trigger: 'blur' },
-        { min: 2, max: 30, message: '角色名称长度在 2 ~ 30 个字符', trigger: 'blur' }
-      ]
+        { min: 2, max: 30, message: '角色名称长度在 2 ~ 30 个字符', trigger: 'blur' },
+      ],
     }
 
     const createOrUpdateFn = async () => {
@@ -110,8 +127,8 @@ export default defineComponent({
       roleForm,
       roleFormRef,
       roleFormRule,
-      currRolePermMenus
+      currRolePermMenus,
     }
-  }
+  },
 })
 </script>

@@ -1,16 +1,43 @@
 <template>
-  <el-dialog title="编辑头像" v-model="visible" top="10vh" width="600px" :before-close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false" append-to-body v-loading.fullscreen.lock="loading">
+  <el-dialog
+    title="编辑头像"
+    v-model="visible"
+    top="10vh"
+    width="600px"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    append-to-body
+    v-loading.fullscreen.lock="loading"
+  >
     <div class="avatar-cropper-wrapper">
       <div class="avatar-cropper">
-        <el-upload accept="image/png, image/jpeg, image/jpg" action="" v-show="!imgUrl" :auto-upload="false" :show-file-list="false" :on-change="uploadClickEvent">
+        <el-upload
+          accept="image/png, image/jpeg, image/jpg"
+          action=""
+          v-show="!imgUrl"
+          :auto-upload="false"
+          :show-file-list="false"
+          :on-change="uploadClickEvent"
+        >
           <el-button ref="avatarUploadBtnRef" type="primary">选择图片</el-button>
         </el-upload>
-        <vue-cropper ref="avatarCropperRef" v-show="imgUrl" :img="imgUrl" auto-crop fixed-box center-box :auto-crop-width="200" :auto-crop-height="200" @realTime="realTimeEvent"></vue-cropper>
+        <vue-cropper
+          ref="avatarCropperRef"
+          v-show="imgUrl"
+          :img="imgUrl"
+          auto-crop
+          fixed-box
+          center-box
+          :auto-crop-width="200"
+          :auto-crop-height="200"
+          @realTime="realTimeEvent"
+        ></vue-cropper>
       </div>
       <div class="avatar-preview">
         <div class="avatar-preview__item" v-for="item in previewStyle" :key="item.zooStyle" :style="item.style">
           <div v-show="imgUrl" :class="previews.div" class="avatar-preview__item-wrapper" :style="item.zoomStyle">
-            <img :src="previews.url" :style="previews.img">
+            <img :src="previews.url" :style="previews.img" />
           </div>
         </div>
         <div class="avatar-preview__tips">
@@ -41,15 +68,15 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     avatarUrl: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   emits: [UPDATE_MODEL_EVENT, 'change'],
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     // dialog
     const visible = ref<boolean>(false)
     const handleClose = () => {
@@ -57,12 +84,15 @@ export default defineComponent({
     }
 
     const imgUrl = ref()
-    watch(() => props.modelValue, (val: boolean) => {
-      visible.value = val
-      if (val) {
-        imgUrl.value = props.avatarUrl
-      }
-    })
+    watch(
+      () => props.modelValue,
+      (val: boolean) => {
+        visible.value = val
+        if (val) {
+          imgUrl.value = props.avatarUrl
+        }
+      },
+    )
 
     const uploadClickEvent = (file: any) => {
       if ('image/png, image/jpeg, image/jpg'.indexOf(file.raw.type) === -1) {
@@ -96,14 +126,14 @@ export default defineComponent({
     const previewStyle = [
       { style: { width: '108px', height: '108px', margin: '0 auto' }, zoomStyle: { zoom: 0.5 } },
       { style: { width: '68px', height: '68px', margin: '27px auto' }, zoomStyle: { zoom: 0.3 } },
-      { style: { width: '48px', height: '48px', margin: '0 auto' }, zoomStyle: { zoom: 0.2 } }
+      { style: { width: '48px', height: '48px', margin: '0 auto' }, zoomStyle: { zoom: 0.2 } },
     ]
 
     // 确认上传
     const avatarCropperRef = ref()
     // 获取裁剪后的图片数据
     const getCropBlob = (): Promise<Blob> => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         avatarCropperRef.value.getCropBlob((data: Blob) => {
           resolve(data)
         })
@@ -139,9 +169,9 @@ export default defineComponent({
       uploadPreviewEvent,
       avatarCropperRef,
       loading,
-      confirmUpload
+      confirmUpload,
     }
-  }
+  },
 })
 </script>
 
@@ -155,16 +185,15 @@ export default defineComponent({
     align-items: center;
     width: 400px;
     height: 400px;
-    background-color: #F0F2F5;
+    background-color: #f0f2f5;
     margin-right: 10px;
     border-radius: 4px;
-
   }
 
   .avatar-preview {
     width: 150px;
     height: 400px;
-    background-color: #F0F2F5;
+    background-color: #f0f2f5;
     border-radius: 4px;
     padding: 16px 0;
 
