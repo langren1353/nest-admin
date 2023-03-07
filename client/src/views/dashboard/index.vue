@@ -25,20 +25,6 @@
 
     <div>
       <el-row :gutter="12">
-        <el-col :span="16" :xs="24" :sm="24" :lg="16">
-          <Charts :options="lineChartOptions" height="400px"></Charts>
-          <div style="margin-top: 12px">
-            <el-row :gutter="12">
-              <el-col :span="12">
-                <Charts :options="pieOptions" height="280px"></Charts>
-                <!-- <chart-pie v-bind="pieDemoData" height="280px"></chart-pie> -->
-              </el-col>
-              <el-col :span="12">
-                <Charts :options="barOptions" height="280px"></Charts>
-              </el-col>
-            </el-row>
-          </div>
-        </el-col>
         <el-col :span="8" :xs="24" :sm="24" :lg="8">
           <div class="product-demo">
             <h3 class="product_tip">项目进度</h3>
@@ -53,12 +39,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import Charts from '_c/Charts/index.vue'
 import GrowCard from './components/GrowCard.vue'
 import ProductCard from './components/ProductCard.vue'
 
 export default defineComponent({
-  components: { GrowCard, ProductCard, Charts },
+  components: { GrowCard, ProductCard },
   setup() {
     const productionDemoData = [
       {
@@ -67,10 +52,7 @@ export default defineComponent({
         desc: '开发任务一简介',
         percent: 25,
         updateDate: '2020.06.12',
-        userAvatar: [
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        ],
+        userAvatar: [],
       },
       {
         guid: 2,
@@ -78,14 +60,7 @@ export default defineComponent({
         desc: '开发任务二简介',
         percent: 65,
         updateDate: '2020.06.23',
-        userAvatar: [
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        ],
+        userAvatar: [],
       },
       {
         guid: 3,
@@ -93,11 +68,7 @@ export default defineComponent({
         desc: '开发任务三简介',
         percent: 85,
         updateDate: '2020.07.12',
-        userAvatar: [
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        ],
+        userAvatar: [],
       },
     ]
 

@@ -269,7 +269,7 @@ export default defineComponent({
           ElMessage({ type: 'error', message: '文件类型错误，请上传 .xlsx 或 .xls 文件' })
           return false
         }
-        if (file.size > 5 * 1024 * 1024) {
+        if ((file.size || 0) > 5 * 1024 * 1024) {
           ElMessage({ type: 'error', message: '文件大小超过，最大支持 5M' })
         }
         return true

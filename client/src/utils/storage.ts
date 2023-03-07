@@ -20,33 +20,34 @@ interface ItokenDecode {
  * @param refreshToken
  */
 export function setToken(token: string, refreshToken: string): void {
-  sessionStorage.setItem(AppStorageKey.TOKEN, token)
+  localStorage.setItem(AppStorageKey.TOKEN, token)
   setRefreshToken(refreshToken)
   // 解析过期时间，设置过期
-  const rtExp = (jwtDecode(refreshToken) as ItokenDecode)?.exp * 1000
+  const exp = (jwtDecode(refreshToken) as ItokenDecode)?.exp as number
+  const rtExp = exp * 1000
   setRTExp(rtExp)
 }
 
 export function getToken(): string | null {
-  return sessionStorage.getItem(AppStorageKey.TOKEN)
+  return localStorage.getItem(AppStorageKey.TOKEN)
 }
 
 export function setRefreshToken(refreshToken: string): void {
-  sessionStorage.setItem(AppStorageKey.REFRESH_TOKEN, refreshToken)
+  localStorage.setItem(AppStorageKey.REFRESH_TOKEN, refreshToken)
 }
 
 export function getRefreshToken(): string | null {
-  return sessionStorage.getItem(AppStorageKey.REFRESH_TOKEN)
+  return localStorage.getItem(AppStorageKey.REFRESH_TOKEN)
 }
 
 export function setRTExp(exp: number): void {
-  sessionStorage.setItem(AppStorageKey.REFRESH_TOKEN_EXP, `${exp}`)
+  localStorage.setItem(AppStorageKey.REFRESH_TOKEN_EXP, `${exp}`)
 }
 export function getRTExp(): number {
-  const rtExpStr = sessionStorage.getItem(AppStorageKey.REFRESH_TOKEN_EXP)
+  const rtExpStr = localStorage.getItem(AppStorageKey.REFRESH_TOKEN_EXP)
   return rtExpStr ? Number(rtExpStr) : 0
 }
 
 export function clearAll() {
-  sessionStorage.clear()
+  localStorage.clear()
 }

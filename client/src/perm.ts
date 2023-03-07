@@ -1,11 +1,11 @@
+import { store } from '@/store'
 import router from './router'
-import { store } from './store/index'
 import { AppRouteRecordRaw } from './common/types/appRoute.type'
 import { PermissionActionContants } from './store/modules/permission'
 import { getToken } from './utils/storage'
 import { UserActionContants } from './store/modules/user'
 
-const whiteList = ['/login']
+const whiteList = ['/login', '/pdf/']
 
 router.beforeEach(async (to, from, next) => {
   const toMetaTitle = to.meta?.title || ''
@@ -24,8 +24,9 @@ router.beforeEach(async (to, from, next) => {
       accessRoutes.forEach((route) => router.addRoute(route))
       next({ ...to, replace: true })
     } else next()
-  } else if (whiteList.indexOf(to.path) !== -1) next()
-  else {
+  } else if (whiteList.some((one) => to.path.includes(one))) {
+    next()
+  } else {
     next(`/login${['', '/'].includes(to.path) ? '' : `?redirect=${to.path}`}`)
   }
 })

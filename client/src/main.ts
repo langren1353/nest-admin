@@ -1,17 +1,12 @@
 import { createApp } from 'vue'
 import './registerServiceWorker'
-import router from './router'
 
 import ELementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-
 import 'dayjs/locale/zh-cn'
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
-
-// import * as ElIconModules from '@element-plus/icons'
 
 import SvgIcon from '_c/SvgIcon/index.vue'
-
+import router from './router'
 import './styles/index.scss'
 
 import permDirective from './directive/perm'

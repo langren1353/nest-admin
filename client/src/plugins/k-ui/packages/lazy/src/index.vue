@@ -13,6 +13,7 @@
 import { defineComponent } from 'vue'
 // 组件依赖 IntersectionObserver API, 在较低版本的浏览器运行，需引入 IntersectionObserver API polyfill
 if (typeof window !== 'undefined' && !window.IntersectionObserver) {
+  // eslint-disable-next-line global-require
   require('intersection-observer')
 }
 export default defineComponent({
@@ -81,11 +82,12 @@ export default defineComponent({
     let rootMargin
     switch (this.direction) {
       case 'vertical':
-        rootMargin = `${parseInt(this.threshold)}px 0px`
+        rootMargin = `${parseInt(this.threshold, 10)}px 0px`
         break
       case 'horizontal':
-        rootMargin = `0px ${parseInt(this.threshold)}px`
+        rootMargin = `0px ${parseInt(this.threshold, 10)}px`
         break
+      default:
     }
     try {
       // 观察视口与组件容器交叉情况

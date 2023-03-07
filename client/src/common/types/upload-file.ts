@@ -1,4 +1,4 @@
-import { UploadFile } from 'element-plus/es/components/upload/src/upload.type'
+import type { UploadFile } from 'element-plus'
 
 export type MyUploadFile = UploadFile & {
   type: string

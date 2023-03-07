@@ -10,6 +10,12 @@ export const constantRoutes: Array<AppRouteRecordRaw> = [
     component: () => import('@/views/user/login/index.vue'),
     meta: { title: '登录' },
   },
+  {
+    path: '/pdf/:id',
+    name: 'pdf-view',
+    component: () => import('@/views/pdf/index.vue'),
+    meta: { title: '预览页面' },
+  },
 ]
 
 export const asyncRoutes: Array<AppRouteRecordRaw> = [

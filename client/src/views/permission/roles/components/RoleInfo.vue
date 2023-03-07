@@ -31,8 +31,9 @@
 import { defineComponent, provide, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { jsonTimeFormat } from '@/utils/index'
-import { MenuApiResult } from '@/api/menu'
+import { MenuApiResult, getAllMenu } from '@/api/menu'
 import { getCurrUserMenuPerms } from '@/api/perm'
+
 import { ICreateOrUpdateRole, delRoleInfo } from '@/api/role'
 import RoleEdit from './RoleEdit.vue'
 
@@ -87,6 +88,7 @@ export default defineComponent({
 
     // 查询所拥有的菜单资源
     const menuList = ref<Array<MenuApiResult>>([])
+    const allMenu = ref<Array<MenuApiResult>>([])
 
     const getMenuList = async () => {
       const res = await getCurrUserMenuPerms()
@@ -94,9 +96,17 @@ export default defineComponent({
         menuList.value = res.data as MenuApiResult[]
       }
     }
+    const getAllMenuList = async () => {
+      const res = await getAllMenu()
+      if (res?.code === 200) {
+        allMenu.value = res.data as MenuApiResult[]
+      }
+    }
     getMenuList()
+    getAllMenuList()
 
     provide('menus', menuList)
+    provide('allmenus', allMenu)
 
     const editChange = () => {
       emit('change', 'edit')

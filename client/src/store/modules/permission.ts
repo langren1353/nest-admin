@@ -8,7 +8,7 @@ import {
   Module,
 } from 'vuex'
 import { AppRouteRecordRaw } from '@/common/types/appRoute.type'
-import { asyncRoutes, constantRoutes } from '@/router/index'
+import { asyncRoutes, constantRoutes } from '@/router'
 import { MenuApiResult } from '@/api/menu'
 import { RootState } from '../index'
 
@@ -73,7 +73,9 @@ const filterAsyncRoutes = (routes: AppRouteRecordRaw[], menus: MenuApiResult[]):
   routes.forEach((route) => {
     const tmp = { ...route }
     if (hasPermission(tmp, menus)) {
-      if (tmp.children && tmp.children.length > 0) tmp.children = filterAsyncRoutes(tmp.children, menus)
+      if (tmp.children && tmp.children.length > 0) {
+        tmp.children = filterAsyncRoutes(tmp.children, menus)
+      }
       res.push(tmp)
     }
   })

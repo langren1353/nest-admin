@@ -7,10 +7,10 @@ export class ResultData {
   }
 
   @ApiProperty({ type: 'number', default: 200 })
-  code: number
+  public code: number
 
   @ApiProperty({ type: 'string', default: 'ok' })
-  msg?: string
+  public msg?: string
 
   data?: any
 

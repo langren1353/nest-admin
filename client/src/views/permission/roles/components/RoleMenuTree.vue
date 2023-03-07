@@ -38,10 +38,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const menuTree = ref<Array<MenuApiResult>>([])
     // 从页面组件中拿取所拥有的菜单
-    const menuList = inject<Ref<Array<MenuApiResult>>>('menus', ref([]))
-    console.log(menuList.value, 345)
+    // const menuList = inject<Ref<Array<MenuApiResult>>>('menus', ref([]))
+    const allMenu = inject<Ref<Array<MenuApiResult>>>('allmenus', ref([]))
+
     watch(
-      () => menuList.value,
+      () => allMenu.value,
       (val) => {
         menuTree.value = arrToTree(val, { root: '0', pidKey: 'parentId' }) as MenuApiResult[]
       },

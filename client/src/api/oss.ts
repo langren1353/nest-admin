@@ -3,6 +3,7 @@ import config from '@/config/index'
 import { BaseResult, Pagination, ResultData, ApiMethodContants } from '../common/types/apiResult.type'
 
 export interface OssApiResult extends BaseResult {
+  name: string
   // 文件路径
   url: string
   // 文件size
@@ -17,6 +18,8 @@ export interface OssApiResult extends BaseResult {
   userAccount: string
 
   createDate: string
+
+  pdfPageCount: string
 }
 
 export interface findOssList extends Pagination {
@@ -38,6 +41,16 @@ export function fileUpload(data: FormData): Promise<ResultData<OssApiResult[]>> 
     url: `${config.api.baseUrl}/oss/upload`,
     method: ApiMethodContants.POST,
     data,
+  })
+}
+
+export function getOSSInfo(oss_id: number | string | string[]): Promise<ResultData<OssApiResult>> {
+  return http.request<ResultData<OssApiResult>>({
+    url: `${config.api.baseUrl}/oss/item`,
+    method: ApiMethodContants.GET,
+    params: {
+      id: oss_id,
+    },
   })
 }
 

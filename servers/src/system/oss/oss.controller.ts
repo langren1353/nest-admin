@@ -43,6 +43,11 @@ export class OssController {
           type: 'string',
           format: 'binary',
         },
+        name: {
+          description: '上传文件的名称',
+          type: 'string',
+          format: 'text',
+        },
         business: {
           description: '上传文件描述，可以是纯字符串，也可以是JSON字符串',
           type: 'string',
@@ -61,17 +66,26 @@ export class OssController {
   @ApiResult(OssEntity)
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() params: { business: string; ori_oss: string },
+    @Body() params: { name: string; business: string; ori_oss: string },
     @Req() req,
   ): Promise<ResultData> {
-    return await this.ossService.create([file], params.business || '', params.ori_oss, req.user)
+    return await this.ossService.create(file, params.name, params.business || '', params.ori_oss, req.user)
   }
 
   @Get('list')
+  @AllowAnon()
   @ApiOperation({ summary: '查询文件上传列表' })
   @ApiResult(OssEntity, true, true)
   async findList(@Query() search: FindOssDto): Promise<ResultData> {
     return await this.ossService.findList(search)
+  }
+
+  @Get('item')
+  @AllowAnon()
+  @ApiOperation({ summary: '查询上传详情' })
+  @ApiResult(OssEntity)
+  async getItem(@Query('id') oss_id: number) {
+    return await this.ossService.getOssDetail(oss_id)
   }
 
   @Delete('delete')
@@ -84,7 +98,16 @@ export class OssController {
   @Get('view/:id')
   @AllowAnon()
   async getFileById(@Param('id') id: number, @Response({ passthrough: true }) resp): Promise<StreamableFile> {
-    console.log('输出文件了')
-    return await this.ossService.getView(id, resp)
+    return await this.ossService.getPdfView(id, resp)
+  }
+
+  @Get('view/:id/:imageid')
+  @AllowAnon()
+  async getImageFileById(
+    @Param('id') id: number,
+    @Param('imageid') imageid: number,
+    @Response({ passthrough: true }) resp,
+  ): Promise<StreamableFile> {
+    return await this.ossService.getPdfImageView(id, imageid, resp)
   }
 }
